@@ -59,6 +59,10 @@ function afficheKanap(res) {
   addProduct(product);
 }
 
+
+
+/* Ajouter produit dans le panier */
+
 function addProduct(product) {
     const btn_envoyerPanier = document.querySelector("#addToCart");
     console.log(btn_envoyerPanier);
@@ -105,9 +109,9 @@ function addProduct(product) {
 
 
 
-            function saveProduct(product) {
-              localStorage.setItem("product", JSON.stringify(product));
-            }
+function saveProduct(product) {
+  localStorage.setItem("product", JSON.stringify(product));
+}
   
 function getProduct() {
     let basket = localStorage.getItem("product");
