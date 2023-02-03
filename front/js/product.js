@@ -80,20 +80,21 @@ function addProduct(product) {
  btn_envoyerPanier.addEventListener("click", (e)=>{
 
   let colorsValue = document.getElementById("colors");
-  console.log(colorsValue.value);
 
 
     let quantityValue = document.getElementById("quantity");
-    console.log(quantityValue.value);
     
+    let qt = quantityValue.value;
+    console.log(qt);
+
+    let col = colorsValue.value;
+    console.log(col);
 
     
-    colorsValue.value = localStorage.getItem("quantity");
-    quantityValue.value = localStorage.getItem("quantity");
+/*     localStorage.getItem("colors");
+    localStorage.getItem("quantity"); */
 
-    let REC = colorsValue.value&&quantityValue.value;
     
-    console.log("ca marche ou pas?");
     
 /*     if(typeof localStorage!='undefined') {
       if('quantity' in localStorage) {
@@ -132,19 +133,24 @@ function addProduct(product) {
     
     /*     if (foundProduct != undefined) {
         foundProduct.quantity++; */
-        getProduct();
-        saveProduct(REC);
+/*         getProduct();
+ */        saveColor(col);
+        saveQuantity(qt);
 
     } )
     /* else {
         quantityPicked.value = 1;
         basket.push(product);
     } */
-    function getProduct() {
-      localStorage.getItem("REC");
+/*     function getProduct() {
+      localStorage.getItem("colors");
+      localStorage.getItem("quantity");
+    } */
+    function saveColor(col) {
+      localStorage.setItem("color", JSON.stringify(col));
     }
-    function saveProduct(REC) {
-      localStorage.setItem("REC", JSON.stringify(REC));
+    function saveQuantity(qt) {
+      localStorage.setItem("quantity", JSON.stringify(qt));
     }
 }
 
