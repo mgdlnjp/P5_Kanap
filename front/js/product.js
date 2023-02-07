@@ -3,8 +3,6 @@ let url = new URL(str);
 let idProduct = url.searchParams.get("id");
 let prep = "";
 
-/* let bas = ["ttl", "qt", "col"];
- */
 GetProduct(url);
 
 /* Pour appeler tous les produits sur le JSON */
@@ -77,11 +75,9 @@ function getBasket() {
 }
 
 function addProduct() {
-  const btn_envoyerPanier = document.getElementById("addToCart");
+  const btn_addPanier = document.getElementById("addToCart");
   let getBas = getBasket();
-/*   let localBas = localStorage.setItem("basket", JSON.stringify(getBas));
- */
-  btn_envoyerPanier.addEventListener("click", () => {
+  btn_addPanier.addEventListener("click", () => {
     let title = document.getElementById("title");
     let colorsValue = document.getElementById("colors");
     let quantityValue = document.getElementById("quantity");
@@ -95,19 +91,10 @@ function addProduct() {
 
     let monArticle = { title: ttl, quantityValue: qt, colorsValue: col };
 
-    /*     getBas.push(monArticle);
-     */
-    /*     console.log(bas);
-     */
     let foundBas = getBas.find((p) => p.id == monArticle.id);
-    if (foundBas = undefined) {
+    if ((foundBas = undefined)) {
       foundBas.id++;
       console.log(foundBas.id);
-      /*       localBas;
-      getBas;
-      console.log(localBas);
-      console.log(getBas);
-      console.log(foundBas); */
     } else {
       monArticle;
       getBas.push(monArticle);
@@ -116,6 +103,21 @@ function addProduct() {
   });
 }
 
+/* let bas = ["ttl", "qt", "col"];
+ */
+
+/*   let localBas = localStorage.setItem("basket", JSON.stringify(getBas));
+ */
+
+/*     getBas.push(monArticle);
+ */
+/*     console.log(bas);
+ */
+/*       localBas;
+getBas;
+console.log(localBas);
+console.log(getBas);
+console.log(foundBas); */
 /*     bas = [ttl, qt, col];
  */
 
