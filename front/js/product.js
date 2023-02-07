@@ -79,8 +79,8 @@ function getBasket() {
 function addProduct() {
   const btn_envoyerPanier = document.getElementById("addToCart");
   let getBas = getBasket();
-  let localBas = localStorage.setItem("basket", JSON.stringify(getBas));
-
+/*   let localBas = localStorage.setItem("basket", JSON.stringify(getBas));
+ */
   btn_envoyerPanier.addEventListener("click", () => {
     let title = document.getElementById("title");
     let colorsValue = document.getElementById("colors");
