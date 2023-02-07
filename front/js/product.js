@@ -58,15 +58,14 @@ function afficheKanap(res) {
     let colorsValue = document.getElementById("colors");
     colorsValue.innerHTML += `<option value="${colors}">${colors}</option>`;
   }
-    addProduct(product);
+  addProduct(product);
 }
 
 /* Ajouter produit dans le panier */
 
-function saveBasket(getBas){
+function saveBasket(getBas) {
   localStorage.setItem("basket", JSON.stringify(getBas));
 }
-
 
 function getBasket() {
   let getBas = localStorage.getItem("basket");
@@ -81,30 +80,30 @@ function addProduct() {
   const btn_envoyerPanier = document.getElementById("addToCart");
   let getBas = getBasket();
   let localBas = localStorage.setItem("basket", JSON.stringify(getBas));
-  
+
   btn_envoyerPanier.addEventListener("click", () => {
     let title = document.getElementById("title");
     let colorsValue = document.getElementById("colors");
     let quantityValue = document.getElementById("quantity");
-    
+
     let ttl = title.textContent;
     console.log(ttl);
     let col = colorsValue.value;
     console.log(col);
     let qt = quantityValue.value;
     console.log(qt);
-    
-    let monArticle = { title: ttl, quantityValue: qt, colorsValue: col };
-    
 
-/*     getBas.push(monArticle);
- */
-/*     console.log(bas);
- */    
+    let monArticle = { title: ttl, quantityValue: qt, colorsValue: col };
+
+    /*     getBas.push(monArticle);
+     */
+    /*     console.log(bas);
+     */
     let foundBas = getBas.find((p) => p.id == monArticle.id);
-    if (foundBas === undefined) {
+    if (foundBas = undefined) {
       foundBas.id++;
-/*       localBas;
+      console.log(foundBas.id);
+      /*       localBas;
       getBas;
       console.log(localBas);
       console.log(getBas);
