@@ -56,8 +56,8 @@ function afficheKanap(res) {
     let colorsValue = document.getElementById("colors");
     colorsValue.innerHTML += `<option value="${colors}">${colors}</option>`;
   }
-  addProduct(product);
-}
+/*   addProduct(product);
+ */}
 
 /* Ajouter produit dans le panier */
 
@@ -89,17 +89,46 @@ function addProduct() {
     let qt = quantityValue.value;
     console.log(qt);
 
+/*     let id = idProduct;
+ */
     let monArticle = { title: ttl, quantityValue: qt, colorsValue: col };
+    console.log(monArticle);
 
-    let foundBas = getBas.find((p) => p.id == monArticle.id);
-    if ((foundBas = undefined)) {
-      foundBas.id++;
-      console.log(foundBas.id);
+    let foundBas = getBas.find(
+      (p) =>
+        p.title == monArticle.title && p.colorsValue == monArticle.colorsValue
+    );
+
+    if (monArticle.quantityValue === "0") {
+      alert("Veuillez ajouter une quantité");
+    } else{
+    if (monArticle.colorsValue === "") {
+        alert("Veuillez ajouter une couleur");
     } else {
+
+      if (foundBas) {
+        console.log("trouvé");
+        console.log(foundBas.title);
+        foundBas.quantityValue =
+          parseInt(foundBas.quantityValue) + parseInt(monArticle.quantityValue);
+      } else {
+        getBas.push(monArticle);
+        console.log("non trouvé");
+      }
+
+      saveBasket(getBas);
+    }
+  }
+
+
+    /* if (monArticle>=0) {
+      console.log("premier")
+      foundBas++;
+    } else {
+      console.log("second")
       monArticle;
       getBas.push(monArticle);
-    }
-    saveBasket(getBas);
+    } */
   });
 }
 

@@ -10,22 +10,22 @@ function GetKanaps(url) {
         return res.json();
       }
     })
-
+    
     .then(function (res) {
       afficheProducts(res);
     })
 
     .catch(function (err) {});
-}
-
-/* Affichage des données produits */
-function afficheProducts(res) {
-
-  /* variable différentes données produits */
-  const articles = res;
-
-  let prep = "";
-
+  }
+  
+  /* Affichage des données produits */
+  function afficheProducts(res) {
+    
+    /* variable différentes données produits */
+    const articles = res;
+    
+    let prep = "";
+    
   for (let article in articles) {
 
     if (1 === 1) {
