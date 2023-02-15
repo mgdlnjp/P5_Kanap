@@ -7,40 +7,36 @@ console.log(resLocalStorage);
 let positionEmptyCart = document.getElementById("cart__items");
 console.log(positionEmptyCart);
 
-
-
 function getCart() {
   if (basketLocalStorage === null || basketLocalStorage == 0) {
     positionEmptyCart.innerHTML = `<p>Votre panier est vide</p>`;
   } else {
     afficheCart();
+    removeItem();
   }
 }
 
 function afficheCart() {
-
-
-  let product = basketLocalStorage.find(e => e === basketLocalStorage[0]);
+  let product = basketLocalStorage.find((e) => e === basketLocalStorage[0]);
   console.log(product);
 
   let kanap = resLocalStorage;
   console.log(kanap);
-  
+
   let m_title = product.title;
   console.log(product.title);
-  
+
   let m_color = product.colorsValue;
   console.log(product.colorsValue);
 
   let m_quantity = product.quantityValue;
   console.log(product.quantityValue);
-  
+
   let m_image = kanap.imageUrl;
-  console.log(product.imageUrl);
+  console.log(kanap.imageUrl);
 
   let m_price = kanap.price;
-  console.log(product.price);
-  
+  console.log(kanap.price);
 
   positionEmptyCart.innerHTML = `<article class="cart__item" data-id="{product-ID}" data-color="{product-color}">
     <div class="cart__item__img">
@@ -63,7 +59,15 @@ function afficheCart() {
       </div>
     </div>
   </article>`;
+}
 
+function removeItem() {
+  let btnRemove = document.querySelector(".deleteItem");
+  console.log(btnRemove);
+
+  btnRemove.addEventListener("click", () => {
+    positionEmptyCart.remove();
+  });
 }
 
 getCart();
