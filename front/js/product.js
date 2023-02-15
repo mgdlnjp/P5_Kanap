@@ -9,19 +9,20 @@ GetProduct(url);
 
 function GetProduct() {
   fetch(`http://localhost:3000/api/products/` + idProduct)
-    .then((res) => {
-      return res.json();
-    })
-
-    .then(function (res) {
-      afficheKanap(res);
-    })
-
-    .then(function (res) {
-      addProduct(res);
-    })
-
-    .catch(function (err) {});
+  .then((res) => {
+    return res.json();
+  })
+  
+  .then(function (res) {
+    localStorage.setItem("res", JSON.stringify(res));
+    afficheKanap(res);
+  })
+  
+  .then(function (res) {
+    addProduct(res);
+  })
+  
+  .catch(function (err) {});
 }
 
 /* Pour afficher les produits du JSON dans la page */

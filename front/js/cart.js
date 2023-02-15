@@ -1,20 +1,13 @@
 let basketLocalStorage = JSON.parse(localStorage.getItem("basket"));
 console.log(basketLocalStorage);
 
+let resLocalStorage = JSON.parse(localStorage.getItem("res"));
+console.log(resLocalStorage);
+
 let positionEmptyCart = document.getElementById("cart__items");
 console.log(positionEmptyCart);
 
-let str = window.location.href;
-console.log(str);
-let url = new URL(str);
-console.log(url);
-let idProduct = url.searchParams.get("id");
-console.log(idProduct);
 
-let imageUrl = `http://localhost:3000/images/` + idProduct;
-console.log(imageUrl);
-
-getCart();
 
 function getCart() {
   if (basketLocalStorage === null || basketLocalStorage == 0) {
@@ -29,22 +22,25 @@ function afficheCart() {
 
   let product = basketLocalStorage.find(e => e === basketLocalStorage[0]);
   console.log(product);
-  
+
+  let kanap = resLocalStorage;
+  console.log(kanap);
   
   let m_title = product.title;
   console.log(product.title);
   
   let m_color = product.colorsValue;
   console.log(product.colorsValue);
-  
-  let m_image = product.imageUrl;
-  console.log(product.imageUrl);
 
-  let m_price = product.priceValue;
-  console.log(product.priceValue);
-  
   let m_quantity = product.quantityValue;
   console.log(product.quantityValue);
+  
+  let m_image = kanap.imageUrl;
+  console.log(product.imageUrl);
+
+  let m_price = kanap.price;
+  console.log(product.price);
+  
 
   positionEmptyCart.innerHTML = `<article class="cart__item" data-id="{product-ID}" data-color="{product-color}">
     <div class="cart__item__img">
@@ -67,4 +63,7 @@ function afficheCart() {
       </div>
     </div>
   </article>`;
+
 }
+
+getCart();
