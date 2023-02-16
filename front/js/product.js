@@ -33,7 +33,6 @@ function afficheKanap(res) {
    */
 
   let m_image = product.imageUrl;
-  console.log(m_image);
   let m_name = product.name;
   let m_price = product.price;
   let m_description = product.description;
@@ -82,7 +81,7 @@ function getBasket() {
 function addProduct(res) {
   const btn_addPanier = document.getElementById("addToCart");
   let getBas = getBasket();
-  let kanap = res;
+  let productIMG = res;
 
   btn_addPanier.addEventListener("click", () => {
     let title = document.getElementById("title");
@@ -90,14 +89,13 @@ function addProduct(res) {
     let colorsValue = document.getElementById("colors");
     let quantityValue = document.getElementById("quantity");
     let imgURL = document.getElementsByClassName("item__img")[0];
-    console.log(imgURL);
 
     let ttl = title.textContent;
     let pri = price.textContent;
     let col = colorsValue.value;
     let qt = quantityValue.value;
 
-    let img = kanap.imageUrl;
+    let img = productIMG.imageUrl;
     console.log(img);
 
     /*     let id = idProduct;
