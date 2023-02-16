@@ -1,8 +1,8 @@
 let basketLocalStorage = JSON.parse(localStorage.getItem("basket"));
 console.log(basketLocalStorage);
 
-let resLocalStorage = JSON.parse(localStorage.getItem("res"));
-console.log(resLocalStorage);
+/* let resLocalStorage = JSON.parse(localStorage.getItem("res"));
+console.log(resLocalStorage); */
 
 let positionEmptyCart = document.getElementById("cart__items");
 console.log(positionEmptyCart);
@@ -20,27 +20,29 @@ function afficheCart() {
   let product = basketLocalStorage.find((e) => e === basketLocalStorage[0]);
   console.log(product);
 
-  let kanap = resLocalStorage;
-  console.log(kanap);
+  for (let product of basketLocalStorage) {
 
-  let m_title = product.title;
-  console.log(product.title);
+/*     let kanap = resLocalStorage;
+    console.log(kanap); */
 
-  let m_color = product.colorsValue;
-  console.log(product.colorsValue);
+    let m_title = product.title;
+    console.log(product.title);
 
-  let m_quantity = product.quantityValue;
-  console.log(product.quantityValue);
+    let m_color = product.colorsValue;
+    console.log(product.colorsValue);
 
-  let m_image = kanap.imageUrl;
-  console.log(kanap.imageUrl);
+    let m_quantity = product.quantityValue;
+    console.log(product.quantityValue);
 
-  let m_price = kanap.price;
-  console.log(kanap.price);
+    let m_image = product.imgURL;
+    console.log(product.imgURL);
 
-  positionEmptyCart.innerHTML = `<article class="cart__item" data-id="{product-ID}" data-color="{product-color}">
+    let m_price = product.price;
+    console.log(product.price);
+
+    positionEmptyCart.innerHTML += `<article class="cart__item" data-id="{product-ID}" data-color="{product-color}">
     <div class="cart__item__img">
-      <img src=${m_image} alt="Photographie d'un canapé">
+      <img src="${m_image}" alt="Photographie d'un canapé">
     </div>
     <div class="cart__item__content">
       <div class="cart__item__content__description">
@@ -59,6 +61,7 @@ function afficheCart() {
       </div>
     </div>
   </article>`;
+  }
 }
 
 function removeItem() {
