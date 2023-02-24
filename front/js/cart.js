@@ -68,14 +68,14 @@ function removeItem() {
    */
   let btnRemove = document.querySelectorAll(".deleteItem");
   console.log(btnRemove);
-  let imgCart = document.querySelectorAll(".cart__item__img");
+/*   let imgCart = document.querySelectorAll(".cart__item__img");
   console.log(imgCart);
   let contDescribe = document.querySelectorAll(
     ".cart__item__content__description"
   );
   console.log(contDescribe);
   let contCart = document.querySelectorAll(".cart__item__content");
-  console.log(contCart);
+  console.log(contCart); */
 
   btnRemove.forEach((element) => {
     /*     console.log("toto");
@@ -91,10 +91,19 @@ function removeItem() {
         (p) => p.title == myTitle && p.colorsValue == myColor
       );
 
+      const ligne = basketLocalStorage.indexOf(kanap);
+      console.log(ligne);
 
       console.log(kanap);
 
-      basketLocalStorage.delete(kanap);
+      basketLocalStorage.splice(ligne);
+      console.log(basketLocalStorage);
+
+      localStorage.setItem("basket",JSON.stringify(basketLocalStorage));
+      location.reload();
+
+/*       kanap.remove(); */
+
 
     });
   });
