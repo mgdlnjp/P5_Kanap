@@ -44,7 +44,7 @@ function afficheCart() {
       <img src="${m_image}"  alt="Photographie d'un canapé">
     </div>
     <div class="cart__item__content" id="${m_title}">
-      <div class="cart__item__content__description">
+      <div class="cart__item__content__description" id="${m_color}">
         <h2>${m_title}</h2>
         <p>${m_color}</p>
         <p>${m_price}€</p>
@@ -55,7 +55,7 @@ function afficheCart() {
           <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${m_quantity}">
         </div>
         <div class="cart__item__content__settings__delete">
-          <p class="deleteItem">Supprimer</p>
+          <p class="deleteItem" id="${m_title}" value="${m_color}" >Supprimer</p>
         </div>
       </div>
     </div>
@@ -70,44 +70,52 @@ function removeItem() {
   console.log(btnRemove);
   let imgCart = document.querySelectorAll(".cart__item__img");
   console.log(imgCart);
+  let contDescribe = document.querySelectorAll(
+    ".cart__item__content__description"
+  );
+  console.log(contDescribe);
   let contCart = document.querySelectorAll(".cart__item__content");
   console.log(contCart);
-
-  
 
   btnRemove.forEach((element) => {
     /*     console.log("toto");
      */
     element.addEventListener("click", (e) => {
-      /* alert(e.target.getAttribute("id")); */
+      let myTitle = e.target.getAttribute("id");
+      console.log(myTitle);
 
-      contCart.forEach((element) => {
-        /*     console.log("toto");
-         */
-        element.addEventListener("click", (e) => {
-          /* alert(e.target.getAttribute("id")); */
-      
-          element.remove(0);
-      
-          imgCart.forEach((element) => {
-            /*     console.log("toto");
-             */
-            element.addEventListener("click", (e) => {
-              /* alert(e.target.getAttribute("id")); */
-        
-              element.remove(0);
-        
-            })
-          })
+      let myColor = e.target.getAttribute("value");
+      console.log(myColor);
 
-        })
-      })
-      
+      let kanap = basketLocalStorage.find(
+        (p) => p.title == myTitle && p.colorsValue == myColor
+      );
 
+
+      console.log(kanap);
+
+      basketLocalStorage.delete(kanap);
+
+    });
+  });
+
+  /*   contCart.forEach((element) => {
+
+    element.addEventListener("click", (e) => {
+  
+      element.remove(0);
+  
+      
     })
   })
+  imgCart.forEach((element) => {
 
+    element.addEventListener("click", (e) => {
 
+      element.remove(0);
+
+    })
+  }) */
 
   /*   btnRemove.addEventListener("click", (e) => {
    */

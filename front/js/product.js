@@ -132,7 +132,7 @@ function addProduct(res) {
     if (monArticle.quantityValue === "0") {
       alert("Veuillez ajouter une quantité");
     } else {
-      if (monArticle.quantityValue > "100") {
+      if (parseInt(monArticle.quantityValue) > 100) {
         alert("Nombre max de canapé atteint");
       } else {
         if (monArticle.colorsValue === "") {
