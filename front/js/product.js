@@ -3,7 +3,7 @@ let url = new URL(str);
 let idProduct = url.searchParams.get("id");
 let prep = "";
 
-GetProduct(url);
+GetProduct();
 
 /* Pour appeler tous les produits sur le JSON */
 
@@ -81,22 +81,34 @@ function getBasket() {
 function addProduct(res) {
   const btn_addPanier = document.getElementById("addToCart");
   let getBas = getBasket();
-  let productIMG = res;
 
+  let productIMG = res;
+/*   console.log(productIMG);
+ */
+  let imgRes = productIMG.imageUrl;
+/*   console.log(imgRes);
+ */
   btn_addPanier.addEventListener("click", () => {
     let title = document.getElementById("title");
     let price = document.getElementById("price");
     let colorsValue = document.getElementById("colors");
     let quantityValue = document.getElementById("quantity");
-    let imgURL = document.getElementsByClassName("item__img")[0];
+/*     let imgURL = document.getElementsByClassName("item__img")[0];
+    console.log(imgURL); */
+
+
 
     let ttl = title.textContent;
     let pri = price.textContent;
     let col = colorsValue.value;
     let qt = quantityValue.value;
 
+    let imgurl = imgRes;
+    console.log(imgurl);
+
+/* 
     let img = productIMG.imageUrl;
-    console.log(img);
+    console.log(img); */
 
     /*     let id = idProduct;
      */
@@ -106,7 +118,7 @@ function addProduct(res) {
       quantityValue: qt,
       colorsValue: col,
       price: pri,
-      imgURL: img,
+      imgURL: imgurl,
     };
 
     let foundBas = getBas.find(
@@ -120,17 +132,22 @@ function addProduct(res) {
     if (monArticle.quantityValue === "0") {
       alert("Veuillez ajouter une quantité");
     } else {
-      if (monArticle.colorsValue === "") {
-        alert("Veuillez ajouter une couleur");
+      if (monArticle.quantityValue > "100") {
+        alert("Nombre max de canapé atteint");
       } else {
-        if (foundBas) {
-          foundBas.quantityValue =
-            parseInt(foundBas.quantityValue) +
-            parseInt(monArticle.quantityValue);
+        if (monArticle.colorsValue === "") {
+          alert("Veuillez ajouter une couleur");
         } else {
-          getBas.push(monArticle);
+          if (foundBas) {
+            foundBas.quantityValue =
+              parseInt(foundBas.quantityValue) +
+              parseInt(monArticle.quantityValue);
+          } else {
+            getBas.push(monArticle);
+            console.log(getBas);
+          }
+          saveBasket(getBas);
         }
-        saveBasket(getBas);
       }
     }
   });
