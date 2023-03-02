@@ -1,6 +1,9 @@
 let basketLocalStorage = JSON.parse(localStorage.getItem("basket"));
 console.log(basketLocalStorage);
 
+let formLocalStorage = JSON.parse(localStorage.getItem("form"));
+console.log(formLocalStorage);
+
 /* let resLocalStorage = JSON.parse(localStorage.getItem("res"));
 console.log(resLocalStorage); */
 
@@ -13,6 +16,8 @@ function getCart() {
   } else {
     afficheCart();
     removeItem();
+    modifyItem();
+    fillForm();
   }
 }
 
@@ -64,22 +69,10 @@ function afficheCart() {
 }
 
 function removeItem() {
-  /*   let btnRemove = document.getElementsByClassName("deleteItem");
-   */
-  let btnRemove = document.querySelectorAll(".deleteItem");
-  console.log(btnRemove);
-/*   let imgCart = document.querySelectorAll(".cart__item__img");
-  console.log(imgCart);
-  let contDescribe = document.querySelectorAll(
-    ".cart__item__content__description"
-  );
-  console.log(contDescribe);
-  let contCart = document.querySelectorAll(".cart__item__content");
-  console.log(contCart); */
+  let deleteItem = document.querySelectorAll(".deleteItem");
+  console.log(deleteItem);
 
-  btnRemove.forEach((element) => {
-    /*     console.log("toto");
-     */
+  deleteItem.forEach((element) => {
     element.addEventListener("click", (e) => {
       let myTitle = e.target.getAttribute("id");
       console.log(myTitle);
@@ -91,48 +84,151 @@ function removeItem() {
         (p) => p.title == myTitle && p.colorsValue == myColor
       );
 
+      /* regarder indexOF */
       const ligne = basketLocalStorage.indexOf(kanap);
       console.log(ligne);
 
       console.log(kanap);
 
+      /* regarder splice */
       basketLocalStorage.splice(ligne);
       console.log(basketLocalStorage);
 
-      localStorage.setItem("basket",JSON.stringify(basketLocalStorage));
+      localStorage.setItem("basket", JSON.stringify(basketLocalStorage));
       location.reload();
 
-/*       kanap.remove(); */
+      /*       kanap.remove(); */
+    });
+  });
+}
 
+function modifyItem() {
+  let itemQuantity = document.querySelectorAll(".itemQuantity");
 
+  for (let p = 0; p < itemQuantity.length; p++) {
+    itemQuantity[p].addEventListener("change", (event) => {
+      event.preventDefault();
+
+      let quantityModify = basketLocalStorage[p].quantityValue;
+      console.log(quantityModify);
+      let itemQuantityValue = itemQuantity[p].valueAsNumber;
+      console.log(itemQuantityValue);
+
+      const resultFind = basketLocalStorage.find(
+        (e) => e.itemQuantityValue !== quantityModify
+      );
+
+      resultFind.quantityValue = itemQuantityValue;
+      basketLocalStorage[p].quantityValue = resultFind.quantityValue;
+
+      localStorage.setItem("basket", JSON.stringify(basketLocalStorage));
+
+      location.reload();
+    });
+  }
+}
+
+function fillForm() {
+  let form = document.querySelector(".cart__order__form");
+
+  let charRegExp = new RegExp("^[a-zA-Z ,.'-]+$");
+  let addressRegExp = new RegExp(
+    "^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+"
+  );
+  let emailRegExp = new RegExp(
+    "^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$"
+  );
+
+  const fields = [
+    { input: form.firstName, validate: validFirstName },
+    { input: form.lastName, validate: validLastName },
+    { input: form.address, validate: validAddress },
+    { input: form.city, validate: validCity },
+    { input: form.email, validate: validEmail },
+  ];
+
+  fields.forEach((field) => {
+    field.input.addEventListener("change", function () {
+      field.validate(this);
     });
   });
 
-  /*   contCart.forEach((element) => {
+  function validateInput(input, regex, errorMessage) {
+    let errorMsg = input.nextElementSibling;
+    if (regex.test(input.value)) {
+      errorMsg.innerHTML = "";
+    } else {
+      errorMsg.innerHTML = errorMessage;
+    }
+  }
 
-    element.addEventListener("click", (e) => {
-  
-      element.remove(0);
-  
-      
-    })
-  })
-  imgCart.forEach((element) => {
+  function validFirstName(inputFirstName) {
+    validateInput(inputFirstName, charRegExp, "Veuillez renseigner ce champ.");
+  }
 
-    element.addEventListener("click", (e) => {
+  function validLastName(inputLastName) {
+    validateInput(inputLastName, charRegExp, "Veuillez renseigner ce champ.");
+  }
 
-      element.remove(0);
+  function validAddress(inputAddress) {
+    validateInput(inputAddress, addressRegExp, "Veuillez renseigner ce champ.");
+  }
 
-    })
-  }) */
+  function validCity(inputCity) {
+    validateInput(inputCity, charRegExp, "Veuillez renseigner ce champ.");
+  }
 
-  /*   btnRemove.addEventListener("click", (e) => {
-   */
-
-  /*     basketLocalStorage.find(
-          );
-          positionEmptyCart.remove(); */
-  /* }); */
+  function validEmail(inputEmail) {
+    validateInput(inputEmail, emailRegExp, "Veuillez renseigner votre email.");
+  }
 }
+
+function postForm(){
+// Get all input elements
+const firstNameInput = document.querySelector("#firstName");
+const lastNameInput = document.querySelector("#lastName");
+const addressInput = document.querySelector("#address");
+const cityInput = document.querySelector("#city");
+const emailInput = document.querySelector("#email");
+
+// Get the submit button
+const orderBtn = document.querySelector("#order");
+
+// Listen to click event on submit button
+orderBtn.addEventListener("click", (event) => {
+  event.preventDefault(); // prevent form from submitting
+
+  // Validate all input fields
+  if (
+    validateInput(firstNameInput, charRegExp, "Veuillez renseigner ce champ.") &&
+    validateInput(lastNameInput, charRegExp, "Veuillez renseigner ce champ.") &&
+    validateInput(addressInput, addressRegExp, "Veuillez renseigner ce champ.") &&
+    validateInput(cityInput, charRegExp, "Veuillez renseigner ce champ.") &&
+    validateInput(emailInput, emailRegExp, "Veuillez renseigner votre email.")
+  ) {
+    // Store form data in an object
+    const formData = {
+      firstName: firstNameInput.value,
+      lastName: lastNameInput.value,
+      address: addressInput.value,
+      city: cityInput.value,
+      email: emailInput.value,
+    };
+
+    // Store form data in localStorage
+    localStorage.setItem("formData", JSON.stringify(formData));
+
+    // Create a random order number
+    const orderNumber = Math.floor(Math.random() * 1000000) + 1;
+
+    // Store order number in localStorage
+    localStorage.setItem("orderNumber", orderNumber);
+
+    // Redirect user to confirmation page
+    window.location.href = "confirmation.html";
+  }
+});
+}
+
 
 getCart();
