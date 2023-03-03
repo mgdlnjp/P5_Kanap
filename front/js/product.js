@@ -93,18 +93,21 @@ function addProduct(res) {
     let price = document.getElementById("price");
     let colorsValue = document.getElementById("colors");
     let quantityValue = document.getElementById("quantity");
+    let id  = idProduct;
 /*     let imgURL = document.getElementsByClassName("item__img")[0];
     console.log(imgURL); */
 
 
 
     let ttl = title.textContent;
-    let pri = price.textContent;
-    let col = colorsValue.value;
+/*     let pri = price.textContent;
+ */    let col = colorsValue.value;
     let qt = quantityValue.value;
 
     let imgurl = imgRes;
     console.log(imgurl);
+
+
 
 /* 
     let img = productIMG.imageUrl;
@@ -114,19 +117,21 @@ function addProduct(res) {
      */
 
     let monArticle = {
+      id:idProduct,
       title: ttl,
       quantityValue: qt,
       colorsValue: col,
-      price: pri,
-      imgURL: imgurl,
+/*       price: pri,
+ */      imgURL: imgurl,
     };
 
     let foundBas = getBas.find(
       (p) =>
         p.title == monArticle.title &&
         p.colorsValue == monArticle.colorsValue &&
-        p.price == monArticle.price &&
-        p.imgURL == monArticle.imgURL
+/*         p.price == monArticle.price &&
+ */        p.imgURL == monArticle.imgURL &&
+ p.id == monArticle.id
     );
 
     if (monArticle.quantityValue === "0") {

@@ -21,7 +21,7 @@ function getCart() {
   }
 }
 
-function afficheCart() {
+async function afficheCart() {
   let product = basketLocalStorage.find((e) => e === basketLocalStorage[0]);
   console.log(product);
 
@@ -41,9 +41,15 @@ function afficheCart() {
     let m_image = product.imgURL;
     console.log(product.imgURL);
 
-    let m_price = product.price;
-    console.log(product.price);
+    let m_id = product.id;
+/*     console.log(m_id);
+ */
+    const article = await fetchPrice(m_id);
+    console.log(article);
 
+    let m_price = article.price;
+/*     console.log(m_price);
+ */
     positionEmptyCart.innerHTML += `<article class="cart__item" data-id="{product-ID}" data-color="{product-color}">
     <div class="cart__item__img" id="${m_image}">
       <img src="${m_image}"  alt="Photographie d'un canapé">
@@ -66,6 +72,16 @@ function afficheCart() {
     </div>
   </article>`;
   }
+}
+
+async function fetchPrice(id) {
+  return fetch(`http://localhost:3000/api/products/` + id)
+  .then((res) =>{
+    return  res.json();
+  })
+  .then((res) =>{
+    return res
+  })
 }
 
 function removeItem() {
@@ -128,6 +144,11 @@ function modifyItem() {
   }
 }
 
+function totalArticle() {
+  
+
+}
+
 function fillForm() {
   let form = document.querySelector(".cart__order__form");
 
@@ -138,6 +159,8 @@ function fillForm() {
   let emailRegExp = new RegExp(
     "^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$"
   );
+
+  let champs = "Veuillez renseigner ";
 
   const fields = [
     { input: form.firstName, validate: validFirstName },
@@ -163,23 +186,23 @@ function fillForm() {
   }
 
   function validFirstName(inputFirstName) {
-    validateInput(inputFirstName, charRegExp, "Veuillez renseigner ce champ.");
-  }
-
+    validateInput(inputFirstName, charRegExp, champs + "votre Nom.");
+  }  
+  
   function validLastName(inputLastName) {
-    validateInput(inputLastName, charRegExp, "Veuillez renseigner ce champ.");
+    validateInput(inputLastName, charRegExp, champs + "votre Prénom.");
   }
 
   function validAddress(inputAddress) {
-    validateInput(inputAddress, addressRegExp, "Veuillez renseigner ce champ.");
+    validateInput(inputAddress, addressRegExp, champs + " l'Adresse.");
   }
 
   function validCity(inputCity) {
-    validateInput(inputCity, charRegExp, "Veuillez renseigner ce champ.");
+    validateInput(inputCity, charRegExp, champs + "la ville.");
   }
 
   function validEmail(inputEmail) {
-    validateInput(inputEmail, emailRegExp, "Veuillez renseigner votre email.");
+    validateInput(inputEmail, emailRegExp, champs + "votre email.");
   }
 }
 
@@ -215,11 +238,14 @@ orderBtn.addEventListener("click", (event) => {
       email: emailInput.value,
     };
 
+    console.log(formData)
+
     // Store form data in localStorage
     localStorage.setItem("formData", JSON.stringify(formData));
 
     // Create a random order number
     const orderNumber = Math.floor(Math.random() * 1000000) + 1;
+    console.log(orderNumber);
 
     // Store order number in localStorage
     localStorage.setItem("orderNumber", orderNumber);
