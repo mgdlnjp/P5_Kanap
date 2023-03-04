@@ -15,8 +15,7 @@ function getCart() {
     positionEmptyCart.innerHTML = `<p>Votre panier est vide</p>`;
   } else {
     afficheCart();
-    removeItem();
-    modifyItem();
+    totalArticle();
     fillForm();
   }
 }
@@ -72,6 +71,11 @@ async function afficheCart() {
     </div>
   </article>`;
   }
+  
+  removeItem(product);
+  modifyItem(product);
+  totalArticle(product);
+
 }
 
 async function fetchPrice(id) {
@@ -82,6 +86,7 @@ async function fetchPrice(id) {
   .then((res) =>{
     return res
   })
+  
 }
 
 function removeItem() {
@@ -90,6 +95,7 @@ function removeItem() {
 
   deleteItem.forEach((element) => {
     element.addEventListener("click", (e) => {
+      e.preventDefault();
       let myTitle = e.target.getAttribute("id");
       console.log(myTitle);
 
@@ -107,13 +113,13 @@ function removeItem() {
       console.log(kanap);
 
       /* regarder splice */
-      basketLocalStorage.splice(ligne);
+      basketLocalStorage.splice(ligne, 1);
       console.log(basketLocalStorage);
 
       localStorage.setItem("basket", JSON.stringify(basketLocalStorage));
+
       location.reload();
 
-      /*       kanap.remove(); */
     });
   });
 }
@@ -145,8 +151,16 @@ function modifyItem() {
 }
 
 function totalArticle() {
-  
+  let totalPrice = document.querySelectorAll(".totalPrice");
+  console.log(totalPrice);
+  for (let p = 0; p < totalPrice.length; p++) {
+    e.preventDefault();
 
+    let quantity = basketLocalStorage[p].quantityValue;
+    console.log(quantity);
+  }
+
+  
 }
 
 function fillForm() {
