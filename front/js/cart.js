@@ -15,14 +15,15 @@ function getCart() {
     positionEmptyCart.innerHTML = `<p>Votre panier est vide</p>`;
   } else {
     afficheCart();
-    totalArticle();
-    fillForm();
   }
 }
 
 async function afficheCart() {
   let product = basketLocalStorage.find((e) => e === basketLocalStorage[0]);
   console.log(product);
+
+  let sum = 0;
+  console.log(sum);
 
   for (let product of basketLocalStorage) {
     /*     let kanap = resLocalStorage;
@@ -49,6 +50,16 @@ async function afficheCart() {
     let m_price = article.price;
     /*     console.log(m_price);
      */
+
+    let priceProduct = m_quantity * m_price;
+    console.log(priceProduct);
+
+    let totalPrice = document.querySelector("#totalPrice");
+    console.log(totalPrice);
+
+    sum = sum + priceProduct;
+    console.log(sum);
+
     positionEmptyCart.innerHTML += `<article class="cart__item" data-id="{product-ID}" data-color="{product-color}">
     <div class="cart__item__img" id="${m_image}">
       <img src="${m_image}"  alt="Photographie d'un canapé">
@@ -62,7 +73,7 @@ async function afficheCart() {
       <div class="cart__item__content__settings">
         <div class="cart__item__content__settings__quantity">
           <p>Qté : </p>
-          <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${m_quantity}">
+          <input type="number"  data-id="${m_title}" data-color="${m_color}" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${m_quantity}">
         </div>
         <div class="cart__item__content__settings__delete">
           <p class="deleteItem" id="${m_title}" value="${m_color}" >Supprimer</p>
@@ -72,9 +83,12 @@ async function afficheCart() {
   </article>`;
   }
 
+  totalPrice.innerHTML = sum;
+
   removeItem(product);
   modifyItem(product);
-  totalArticle(product);
+  fillForm();
+  postForm();
 }
 
 async function fetchPrice(id) {
@@ -133,55 +147,30 @@ function modifyItem() {
       let itemQuantityValue = itemQuantity[p].valueAsNumber;
       console.log(itemQuantityValue);
 
+      let myTitle = event.target.getAttribute("data-id");
+      console.log(myTitle);
+
+      let myColor = event.target.getAttribute("data-color");
+      console.log(myColor);
+
       const resultFind = basketLocalStorage.find(
-        (e) => e.itemQuantityValue !== quantityModify
+        (e) => e.title == myTitle && e.colorsValue == myColor
       );
+      console.log(resultFind);
 
       resultFind.quantityValue = itemQuantityValue;
       basketLocalStorage[p].quantityValue = resultFind.quantityValue;
 
       localStorage.setItem("basket", JSON.stringify(basketLocalStorage));
 
+      if (itemQuantityValue == "0") {
+        alert("Veuillez saisir une quantité supérieur à zéro");
+      }
+
       location.reload();
     });
   }
 }
-
-  function totalArticle() {
-  let totalPrice = document.querySelector("#totalPrice");
-  console.log(totalPrice);
-
-/*   let product = basketLocalStorage.find((e) => e === basketLocalStorage[0]);
-  console.log(product); */
-  
-  
-  /*   let m_id = product.id;
-  
-  const article = await fetchPrice(m_id);
-  console.log(article); */
-  let productPrice = document.querySelector(".cart__item__content__description").querySelectorAll("p")[1];
-  console.log(productPrice);
-
-  let productQuantity = document.querySelector(".itemQuantity").value;
-  console.log(productQuantity);
-  
-  
-  let totalItem = productQuantity + productPrice;
-  console.log(totalItem)
-  
-  /* let productPrice = document.querySelectorAll ();
-let productQuantity = document.querySelectorAll (); */
-   for (let p = 0; p < totalPrice.length; p++) {
-    totalPrice = "prix"; */
-      let product = cart[i];
-     
-    totalPrice += productQuantity * productPrice;
- 
-
-
-/* } */
-/*   return totalPrice;
- */}
 
 
 function fillForm() {
@@ -210,7 +199,7 @@ function fillForm() {
       field.validate(this);
     });
   });
-
+  
   function validateInput(input, regex, errorMessage) {
     let errorMsg = input.nextElementSibling;
     if (regex.test(input.value)) {
@@ -219,7 +208,7 @@ function fillForm() {
       errorMsg.innerHTML = errorMessage;
     }
   }
-
+  
   function validFirstName(inputFirstName) {
     validateInput(inputFirstName, charRegExp, champs + "votre Nom.");
   }
@@ -231,11 +220,11 @@ function fillForm() {
   function validAddress(inputAddress) {
     validateInput(inputAddress, addressRegExp, champs + " l'Adresse.");
   }
-
+  
   function validCity(inputCity) {
     validateInput(inputCity, charRegExp, champs + "la ville.");
   }
-
+  
   function validEmail(inputEmail) {
     validateInput(inputEmail, emailRegExp, champs + "votre email.");
   }
@@ -243,39 +232,74 @@ function fillForm() {
 
 function postForm() {
   // Get all input elements
-  const firstNameInput = document.querySelector("#firstName");
-  const lastNameInput = document.querySelector("#lastName");
-  const addressInput = document.querySelector("#address");
-  const cityInput = document.querySelector("#city");
-  const emailInput = document.querySelector("#email");
+  const firstNameInput = document.querySelector("#firstName").value;
+  console.log(firstNameInput);
+  const lastNameInput = document.querySelector("#lastName").value;
+  console.log(lastNameInput);
+  const addressInput = document.querySelector("#address").value;
+  console.log(addressInput);
+  const cityInput = document.querySelector("#city").value;
+  console.log(cityInput);
+  const emailInput = document.querySelector("#email").value;
+  console.log(emailInput);
+
+  let charRegExp = new RegExp("^[a-zA-Z ,.'-]+$");
+  let champs = "Veuillez renseigner ";
 
   // Get the submit button
   const orderBtn = document.querySelector("#order");
+  console.log(orderBtn);
 
   // Listen to click event on submit button
   orderBtn.addEventListener("click", (event) => {
+
+    alert("sans erreur")
     event.preventDefault(); // prevent form from submitting
+    
+    function validateInput(input, regex, errorMessage, balise) {
+      let errorMsg = input.nextElementSibling;
+      console.log(balise)
+      if (regex.test(input.value)) {
+/*         errorMsg.innerHTML = "";
+ */      
+balise.innerHTML = "";
+} else {
+        errorMsg.innerHTML = errorMessage;
+      }
+    }
+
+
+
+    function validFirstName(inputFirstName) {
+      alert(
+       validateInput(inputFirstName, charRegExp, champs + "votre Nom." , "firstNameErrorMsg"));
+    }
+
+    validFirstName(firstNameInput);
 
     // Validate all input fields
     if (
-      validateInput(
+/*       validateInput(
         firstNameInput,
         charRegExp,
         "Veuillez renseigner ce champ."
-      ) &&
-      validateInput(
+      ) && */
+/*       validateInput(
         lastNameInput,
         charRegExp,
         "Veuillez renseigner ce champ."
-      ) &&
-      validateInput(
+      ) && */
+/*       validateInput(
         addressInput,
         addressRegExp,
         "Veuillez renseigner ce champ."
-      ) &&
-      validateInput(cityInput, charRegExp, "Veuillez renseigner ce champ.") &&
-      validateInput(emailInput, emailRegExp, "Veuillez renseigner votre email.")
+      ) && */
+      /* validateInput(cityInput, charRegExp, "Veuillez renseigner ce champ.") && */
+      /* validateInput(emailInput, emailRegExp, "Veuillez renseigner votre email.") */
+      1==1
     ) {
+
+      alert(firstNameInput);
       // Store form data in an object
       const formData = {
         firstName: firstNameInput.value,
@@ -302,5 +326,7 @@ function postForm() {
     }
   });
 }
+
+
 
 getCart();
