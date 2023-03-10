@@ -41,14 +41,14 @@ async function afficheCart() {
     console.log(product.imgURL);
 
     let m_id = product.id;
-/*     console.log(m_id);
- */
+    /*     console.log(m_id);
+     */
     const article = await fetchPrice(m_id);
     console.log(article);
 
     let m_price = article.price;
-/*     console.log(m_price);
- */
+    /*     console.log(m_price);
+     */
     positionEmptyCart.innerHTML += `<article class="cart__item" data-id="{product-ID}" data-color="{product-color}">
     <div class="cart__item__img" id="${m_image}">
       <img src="${m_image}"  alt="Photographie d'un canapé">
@@ -71,22 +71,20 @@ async function afficheCart() {
     </div>
   </article>`;
   }
-  
+
   removeItem(product);
   modifyItem(product);
   totalArticle(product);
-
 }
 
 async function fetchPrice(id) {
   return fetch(`http://localhost:3000/api/products/` + id)
-  .then((res) =>{
-    return  res.json();
-  })
-  .then((res) =>{
-    return res
-  })
-  
+    .then((res) => {
+      return res.json();
+    })
+    .then((res) => {
+      return res;
+    });
 }
 
 function removeItem() {
@@ -119,7 +117,6 @@ function removeItem() {
       localStorage.setItem("basket", JSON.stringify(basketLocalStorage));
 
       location.reload();
-
     });
   });
 }
@@ -150,18 +147,42 @@ function modifyItem() {
   }
 }
 
-function totalArticle() {
-  let totalPrice = document.querySelectorAll(".totalPrice");
+  function totalArticle() {
+  let totalPrice = document.querySelector("#totalPrice");
   console.log(totalPrice);
-  for (let p = 0; p < totalPrice.length; p++) {
-    e.preventDefault();
 
-    let quantity = basketLocalStorage[p].quantityValue;
-    console.log(quantity);
-  }
-
+/*   let product = basketLocalStorage.find((e) => e === basketLocalStorage[0]);
+  console.log(product); */
   
-}
+  
+  /*   let m_id = product.id;
+  
+  const article = await fetchPrice(m_id);
+  console.log(article); */
+  let productPrice = document.querySelector(".cart__item__content__description").querySelectorAll("p")[1];
+  console.log(productPrice);
+
+  let productQuantity = document.querySelector(".itemQuantity").value;
+  console.log(productQuantity);
+  
+  
+  let totalItem = productQuantity + productPrice;
+  console.log(totalItem)
+  
+  /* let productPrice = document.querySelectorAll ();
+let productQuantity = document.querySelectorAll (); */
+   for (let p = 0; p < totalPrice.length; p++) {
+    totalPrice = "prix"; */
+      let product = cart[i];
+     
+    totalPrice += productQuantity * productPrice;
+ 
+
+
+/* } */
+/*   return totalPrice;
+ */}
+
 
 function fillForm() {
   let form = document.querySelector(".cart__order__form");
@@ -201,8 +222,8 @@ function fillForm() {
 
   function validFirstName(inputFirstName) {
     validateInput(inputFirstName, charRegExp, champs + "votre Nom.");
-  }  
-  
+  }
+
   function validLastName(inputLastName) {
     validateInput(inputLastName, charRegExp, champs + "votre Prénom.");
   }
@@ -220,55 +241,66 @@ function fillForm() {
   }
 }
 
-function postForm(){
-// Get all input elements
-const firstNameInput = document.querySelector("#firstName");
-const lastNameInput = document.querySelector("#lastName");
-const addressInput = document.querySelector("#address");
-const cityInput = document.querySelector("#city");
-const emailInput = document.querySelector("#email");
+function postForm() {
+  // Get all input elements
+  const firstNameInput = document.querySelector("#firstName");
+  const lastNameInput = document.querySelector("#lastName");
+  const addressInput = document.querySelector("#address");
+  const cityInput = document.querySelector("#city");
+  const emailInput = document.querySelector("#email");
 
-// Get the submit button
-const orderBtn = document.querySelector("#order");
+  // Get the submit button
+  const orderBtn = document.querySelector("#order");
 
-// Listen to click event on submit button
-orderBtn.addEventListener("click", (event) => {
-  event.preventDefault(); // prevent form from submitting
+  // Listen to click event on submit button
+  orderBtn.addEventListener("click", (event) => {
+    event.preventDefault(); // prevent form from submitting
 
-  // Validate all input fields
-  if (
-    validateInput(firstNameInput, charRegExp, "Veuillez renseigner ce champ.") &&
-    validateInput(lastNameInput, charRegExp, "Veuillez renseigner ce champ.") &&
-    validateInput(addressInput, addressRegExp, "Veuillez renseigner ce champ.") &&
-    validateInput(cityInput, charRegExp, "Veuillez renseigner ce champ.") &&
-    validateInput(emailInput, emailRegExp, "Veuillez renseigner votre email.")
-  ) {
-    // Store form data in an object
-    const formData = {
-      firstName: firstNameInput.value,
-      lastName: lastNameInput.value,
-      address: addressInput.value,
-      city: cityInput.value,
-      email: emailInput.value,
-    };
+    // Validate all input fields
+    if (
+      validateInput(
+        firstNameInput,
+        charRegExp,
+        "Veuillez renseigner ce champ."
+      ) &&
+      validateInput(
+        lastNameInput,
+        charRegExp,
+        "Veuillez renseigner ce champ."
+      ) &&
+      validateInput(
+        addressInput,
+        addressRegExp,
+        "Veuillez renseigner ce champ."
+      ) &&
+      validateInput(cityInput, charRegExp, "Veuillez renseigner ce champ.") &&
+      validateInput(emailInput, emailRegExp, "Veuillez renseigner votre email.")
+    ) {
+      // Store form data in an object
+      const formData = {
+        firstName: firstNameInput.value,
+        lastName: lastNameInput.value,
+        address: addressInput.value,
+        city: cityInput.value,
+        email: emailInput.value,
+      };
 
-    console.log(formData)
+      console.log(formData);
 
-    // Store form data in localStorage
-    localStorage.setItem("formData", JSON.stringify(formData));
+      // Store form data in localStorage
+      localStorage.setItem("formData", JSON.stringify(formData));
 
-    // Create a random order number
-    const orderNumber = Math.floor(Math.random() * 1000000) + 1;
-    console.log(orderNumber);
+      // Create a random order number
+      const orderNumber = Math.floor(Math.random() * 1000000) + 1;
+      console.log(orderNumber);
 
-    // Store order number in localStorage
-    localStorage.setItem("orderNumber", orderNumber);
+      // Store order number in localStorage
+      localStorage.setItem("orderNumber", orderNumber);
 
-    // Redirect user to confirmation page
-    window.location.href = "confirmation.html";
-  }
-});
+      // Redirect user to confirmation page
+      window.location.href = "confirmation.html";
+    }
+  });
 }
-
 
 getCart();
