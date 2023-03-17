@@ -87,7 +87,7 @@ async function afficheCart() {
 
   removeItem(product);
   modifyItem(product);
-  fillForm();
+ /*  fillForm(); */
   postForm();
 }
 
@@ -172,7 +172,6 @@ function modifyItem() {
   }
 }
 
-
 function fillForm() {
   let form = document.querySelector(".cart__order__form");
 
@@ -199,7 +198,7 @@ function fillForm() {
       field.validate(this);
     });
   });
-  
+
   function validateInput(input, regex, errorMessage) {
     let errorMsg = input.nextElementSibling;
     if (regex.test(input.value)) {
@@ -208,7 +207,7 @@ function fillForm() {
       errorMsg.innerHTML = errorMessage;
     }
   }
-  
+
   function validFirstName(inputFirstName) {
     validateInput(inputFirstName, charRegExp, champs + "votre Nom.");
   }
@@ -220,18 +219,22 @@ function fillForm() {
   function validAddress(inputAddress) {
     validateInput(inputAddress, addressRegExp, champs + " l'Adresse.");
   }
-  
+
   function validCity(inputCity) {
     validateInput(inputCity, charRegExp, champs + "la ville.");
   }
-  
+
   function validEmail(inputEmail) {
     validateInput(inputEmail, emailRegExp, champs + "votre email.");
   }
 }
 
+
+
 function postForm() {
   // Get all input elements
+/*   const orderId = document.querySelector("#orderId");
+ */ 
   const firstNameInput = document.querySelector("#firstName").value;
   console.log(firstNameInput);
   const lastNameInput = document.querySelector("#lastName").value;
@@ -243,6 +246,7 @@ function postForm() {
   const emailInput = document.querySelector("#email").value;
   console.log(emailInput);
 
+
   let charRegExp = new RegExp("^[a-zA-Z ,.'-]+$");
   let champs = "Veuillez renseigner ";
 
@@ -252,55 +256,76 @@ function postForm() {
 
   // Listen to click event on submit button
   orderBtn.addEventListener("click", (event) => {
+/*     alert("sans erreur");
+ */    event.preventDefault(); // prevent form from submitting
 
-    alert("sans erreur")
-    event.preventDefault(); // prevent form from submitting
-    
-    function validateInput(input, regex, errorMessage, balise) {
+
+    const firstNameInput = document.querySelector("#firstName").value;
+
+
+    function validateInput(input, regex, errorMessage, baliseError) {
       let errorMsg = input.nextElementSibling;
-      console.log(balise)
-      if (regex.test(input.value)) {
-/*         errorMsg.innerHTML = "";
- */      
-balise.innerHTML = "";
-} else {
+      console.log(input);
+      console.log(errorMsg);
+      console.log(regex);
+/*       console.log(balise);
+ */      if (regex.test(input)) {
+        /*         errorMsg.innerHTML = "";
+        */
+        return true;
+       /*        balise.innerHTML = "balise vide";
+      */      } else {
         errorMsg.innerHTML = errorMessage;
-      }
+        return false;
+/*         errorMsg.innerHTML = errorMessage;
+ */      }
     }
+
+
 
 
 
     function validFirstName(inputFirstName) {
       alert(
-       validateInput(inputFirstName, charRegExp, champs + "votre Nom." , "firstNameErrorMsg"));
+        validateInput(
+          inputFirstName,
+          charRegExp,
+          champs + "votre Nom.",
+          "firstNameErrorMsg"
+        )
+      );
     }
+
+
+
+
+
 
     validFirstName(firstNameInput);
 
     // Validate all input fields
     if (
-/*       validateInput(
+      /*       validateInput(
         firstNameInput,
         charRegExp,
         "Veuillez renseigner ce champ."
       ) && */
-/*       validateInput(
+      /*       validateInput(
         lastNameInput,
         charRegExp,
         "Veuillez renseigner ce champ."
       ) && */
-/*       validateInput(
+      /*       validateInput(
         addressInput,
         addressRegExp,
         "Veuillez renseigner ce champ."
       ) && */
       /* validateInput(cityInput, charRegExp, "Veuillez renseigner ce champ.") && */
       /* validateInput(emailInput, emailRegExp, "Veuillez renseigner votre email.") */
-      1==1
+      1 == 1
     ) {
-
-      alert(firstNameInput);
-      // Store form data in an object
+/*       alert(firstNameInput);
+ */      // Store form data in an object
       const formData = {
         firstName: firstNameInput.value,
         lastName: lastNameInput.value,
@@ -309,8 +334,8 @@ balise.innerHTML = "";
         email: emailInput.value,
       };
 
-      console.log(formData);
-
+/*       console.log(formData);
+ */
       // Store form data in localStorage
       localStorage.setItem("formData", JSON.stringify(formData));
 
@@ -322,11 +347,10 @@ balise.innerHTML = "";
       localStorage.setItem("orderNumber", orderNumber);
 
       // Redirect user to confirmation page
-      window.location.href = "confirmation.html";
+/*       window.location.href = "confirmation.html";
+      orderId.innerHTML = orderNumber; */
     }
   });
 }
-
-
 
 getCart();
