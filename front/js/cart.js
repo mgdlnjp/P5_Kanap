@@ -87,7 +87,6 @@ async function afficheCart() {
 
   removeItem(product);
   modifyItem(product);
- /*  fillForm(); */
   postForm();
 }
 
@@ -172,183 +171,104 @@ function modifyItem() {
   }
 }
 
-function fillForm() {
-  let form = document.querySelector(".cart__order__form");
-
+function postForm() {
+  //Préparation des regles pour verifier les champs du formulaire
   let charRegExp = new RegExp("^[a-zA-Z ,.'-]+$");
-  let addressRegExp = new RegExp(
-    "^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+"
-  );
+  let addressRegExp = new RegExp("[A-Za-z0-9s'À-ÖØ-öø-ÿ]*$"); //Ce regex autorise les chiffres en début de ligne
   let emailRegExp = new RegExp(
     "^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$"
   );
 
-  let champs = "Veuillez renseigner ";
-
-  const fields = [
-    { input: form.firstName, validate: validFirstName },
-    { input: form.lastName, validate: validLastName },
-    { input: form.address, validate: validAddress },
-    { input: form.city, validate: validCity },
-    { input: form.email, validate: validEmail },
-  ];
-
-  fields.forEach((field) => {
-    field.input.addEventListener("change", function () {
-      field.validate(this);
-    });
-  });
-
-  function validateInput(input, regex, errorMessage) {
-    let errorMsg = input.nextElementSibling;
-    if (regex.test(input.value)) {
-      errorMsg.innerHTML = "";
-    } else {
-      errorMsg.innerHTML = errorMessage;
-    }
-  }
-
-  function validFirstName(inputFirstName) {
-    validateInput(inputFirstName, charRegExp, champs + "votre Nom.");
-  }
-
-  function validLastName(inputLastName) {
-    validateInput(inputLastName, charRegExp, champs + "votre Prénom.");
-  }
-
-  function validAddress(inputAddress) {
-    validateInput(inputAddress, addressRegExp, champs + " l'Adresse.");
-  }
-
-  function validCity(inputCity) {
-    validateInput(inputCity, charRegExp, champs + "la ville.");
-  }
-
-  function validEmail(inputEmail) {
-    validateInput(inputEmail, emailRegExp, champs + "votre email.");
-  }
-}
-
-
-
-function postForm() {
-  // Get all input elements
-/*   const orderId = document.querySelector("#orderId");
- */ 
-  const firstNameInput = document.querySelector("#firstName").value;
-  console.log(firstNameInput);
-  const lastNameInput = document.querySelector("#lastName").value;
-  console.log(lastNameInput);
-  const addressInput = document.querySelector("#address").value;
-  console.log(addressInput);
-  const cityInput = document.querySelector("#city").value;
-  console.log(cityInput);
-  const emailInput = document.querySelector("#email").value;
-  console.log(emailInput);
-
-
-  let charRegExp = new RegExp("^[a-zA-Z ,.'-]+$");
+  //début du message à afficher en cas d'erreur
   let champs = "Veuillez renseigner ";
 
   // Get the submit button
   const orderBtn = document.querySelector("#order");
-  console.log(orderBtn);
+  //console.log(orderBtn);
 
   // Listen to click event on submit button
   orderBtn.addEventListener("click", (event) => {
-/*     alert("sans erreur");
- */    event.preventDefault(); // prevent form from submitting
+    event.preventDefault(); // prevent form from submitting
 
-
+    // Récupération des valeurs du formaulaire
     const firstNameInput = document.querySelector("#firstName").value;
+    const lastNameInput = document.querySelector("#lastName").value;
+    const addressInput = document.querySelector("#address").value;
+    const cityInput = document.querySelector("#city").value;
+    const emailInput = document.querySelector("#email").value;
 
-
+    //La fonction suivante permet de valider les champs que je lui passe en parametre. Elle retourne true ou false
+    //input = le champ que je veux traiter
+    //regex = l'expression réguliere que je veux comparer au champ input
+    //errorMessage = le message d'erreur que je veux afficher
+    //baliseError = l'id de la base du front que je veux remplacer pour afficher le message
     function validateInput(input, regex, errorMessage, baliseError) {
-      let errorMsg = input.nextElementSibling;
-      console.log(input);
-      console.log(errorMsg);
-      console.log(regex);
-/*       console.log(balise);
- */      if (regex.test(input)) {
-        /*         errorMsg.innerHTML = "";
-        */
+      let errorMsg = document.getElementById(baliseError);
+      if (regex.test(input)) {
+        errorMsg.innerHTML = ""; //Ici le message d'erreur est remit à blanc
         return true;
-       /*        balise.innerHTML = "balise vide";
-      */      } else {
+      } else {
         errorMsg.innerHTML = errorMessage;
         return false;
-/*         errorMsg.innerHTML = errorMessage;
- */      }
+      }
     }
 
-
-
-
-
-    function validFirstName(inputFirstName) {
-      alert(
-        validateInput(
-          inputFirstName,
-          charRegExp,
-          champs + "votre Nom.",
-          "firstNameErrorMsg"
-        )
-      );
-    }
-
-
-
-
-
-
-    validFirstName(firstNameInput);
-
-    // Validate all input fields
-    if (
-      /*       validateInput(
+    //Controler tous les champs.
+    //Lorsque toutes les validations seront à true, la commande pourra être passée
+    let isFormValid =
+      validateInput(
         firstNameInput,
         charRegExp,
-        "Veuillez renseigner ce champ."
-      ) && */
-      /*       validateInput(
+        champs + "votre Prénom.",
+        "firstNameErrorMsg"
+      ) &&
+      validateInput(
         lastNameInput,
         charRegExp,
-        "Veuillez renseigner ce champ."
-      ) && */
-      /*       validateInput(
+        champs + "votre Nom.",
+        "lastNameErrorMsg"
+      ) &&
+      validateInput(
         addressInput,
         addressRegExp,
-        "Veuillez renseigner ce champ."
-      ) && */
-      /* validateInput(cityInput, charRegExp, "Veuillez renseigner ce champ.") && */
-      /* validateInput(emailInput, emailRegExp, "Veuillez renseigner votre email.") */
-      1 == 1
-    ) {
-/*       alert(firstNameInput);
- */      // Store form data in an object
+        champs + "votre Adresse.",
+        "addressErrorMsg"
+      ) &&
+      validateInput(
+        cityInput,
+        charRegExp,
+        champs + "votre Ville.",
+        "addressErrorMsg"
+      ) &&
+      validateInput(
+        emailInput,
+        emailRegExp,
+        champs + "votre Email.",
+        "addressErrorMsg"
+      );
+
+    if ((isFormValid = true)) {
+      //si isFormValid est égal à true, alors tous les champs du formulaire sont valides
+
       const formData = {
-        firstName: firstNameInput.value,
-        lastName: lastNameInput.value,
-        address: addressInput.value,
-        city: cityInput.value,
-        email: emailInput.value,
+        firstName: firstNameInput,
+        lastName: lastNameInput,
+        address: addressInput,
+        city: cityInput,
+        email: emailInput,
       };
 
-/*       console.log(formData);
- */
-      // Store form data in localStorage
+      console.log(formData);
+
+      // si tous les champs sont valides, on stocke formData dans localStorage et on redirige vers confirmation
       localStorage.setItem("formData", JSON.stringify(formData));
+      window.location.href = "confirmation.html";
 
-      // Create a random order number
-      const orderNumber = Math.floor(Math.random() * 1000000) + 1;
-      console.log(orderNumber);
-
-      // Store order number in localStorage
-      localStorage.setItem("orderNumber", orderNumber);
-
-      // Redirect user to confirmation page
-/*       window.location.href = "confirmation.html";
-      orderId.innerHTML = orderNumber; */
+    } else {
+      //si isFormValid est égal à false, envoi d'un message d'erreur
+      alert(
+        "Le formulaire n'est pas renseigné correctement. Veuillez vérifier votre saisie!"
+      );
     }
   });
 }
