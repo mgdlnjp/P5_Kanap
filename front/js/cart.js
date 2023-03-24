@@ -258,13 +258,42 @@ function postForm() {
         email: emailInput,
       };
 
+      let sendData = {contact: formData, products: basketLocalStorage,
+      }
+
+      console.log(basketLocalStorage);
       console.log(formData);
 
-      // si tous les champs sont valides, on stocke formData dans localStorage et on redirige vers confirmation
-      localStorage.setItem("formData", JSON.stringify(formData));
-      window.location.href = "confirmation.html";
 
-    } else {
+      const options = {
+        method: "POST",
+        body: JSON.stringify(sendData),
+        headers: {
+          'Accept': "application/json",
+          "Content-Type": "application/json",
+        },
+      };
+
+      fetch("http://localhost:3000/api/products/order", options)
+      .then((response) => response.json())
+      .then((data) => {
+          console.log(data);
+/*           localStorage.clear();
+ */          
+/* localStorage.setItem("orderId", data.orderId);
+ */
+/*           document.location.href = "confirmation.html";
+ */      })
+      .catch((err) => {
+          alert ("Problème avec fetch : " + err.message);
+      });
+
+      /*       console.log(formData); */
+
+      // si tous les champs sont valides, on stocke formData dans localStorage et on redirige vers confirmation
+      /* localStorage.setItem("formData", JSON.stringify(formData)); */
+/*       window.location.href = "confirmation.html";
+ */    } else {
       //si isFormValid est égal à false, envoi d'un message d'erreur
       alert(
         "Le formulaire n'est pas renseigné correctement. Veuillez vérifier votre saisie!"

@@ -6,4 +6,5 @@ console.log(orderNumber);
 orderId.innerHTML = orderNumber;
 
 /* Suppression des datas de la commande dans le localStorage */
-localStorage.clear();
+/* localStorage.clear();
+ */
