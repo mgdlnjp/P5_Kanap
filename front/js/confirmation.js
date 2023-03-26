@@ -1,10 +1,8 @@
 let orderId = document.querySelector("#orderId");
 
-/* Creation et Affichage du numéro de commande */
-let orderNumber = Math.floor(Math.random() * 1000000) + 1;
-console.log(orderNumber);
-orderId.innerHTML = orderNumber;
+/* Affichage du numéro de commande */
+orderId.innerHTML = localStorage.getItem("orderId");
 
 /* Suppression des datas de la commande dans le localStorage */
-/* localStorage.clear();
- */
+localStorage.clear();
+          

@@ -38,8 +38,8 @@ async function afficheCart() {
     let m_quantity = product.quantityValue;
     console.log(product.quantityValue);
 
-    let m_image = product.imgURL;
-    console.log(product.imgURL);
+    let m_image = product.imageUrl;
+    console.log(product.imageUrl);
 
     let m_id = product.id;
     /*     console.log(m_id);
@@ -247,9 +247,8 @@ function postForm() {
         "addressErrorMsg"
       );
 
-    if ((isFormValid = true)) {
+    if (isFormValid) {
       //si isFormValid est égal à true, alors tous les champs du formulaire sont valides
-
       const formData = {
         firstName: firstNameInput,
         lastName: lastNameInput,
@@ -258,42 +257,43 @@ function postForm() {
         email: emailInput,
       };
 
-      let sendData = {contact: formData, products: basketLocalStorage,
-      }
+      let prodId = [];
+      basketLocalStorage.forEach((objet) => {
+        prodId.push(objet.id);
+      });
 
-      console.log(basketLocalStorage);
-      console.log(formData);
+      let sendData = {
+        contact: formData,
+        products: prodId,
+      };
 
+      console.log(sendData);
+
+      localStorage.setItem("formData", JSON.stringify(sendData));
 
       const options = {
         method: "POST",
         body: JSON.stringify(sendData),
         headers: {
-          'Accept': "application/json",
+          Accept: "application/json",
           "Content-Type": "application/json",
         },
       };
 
       fetch("http://localhost:3000/api/products/order", options)
-      .then((response) => response.json())
-      .then((data) => {
+        .then((response) => response.json())
+        .then((data) => {
           console.log(data);
-/*           localStorage.clear();
- */          
-/* localStorage.setItem("orderId", data.orderId);
- */
-/*           document.location.href = "confirmation.html";
- */      })
-      .catch((err) => {
-          alert ("Problème avec fetch : " + err.message);
-      });
 
-      /*       console.log(formData); */
+          localStorage.setItem("orderId", data.orderId);
 
-      // si tous les champs sont valides, on stocke formData dans localStorage et on redirige vers confirmation
-      /* localStorage.setItem("formData", JSON.stringify(formData)); */
-/*       window.location.href = "confirmation.html";
- */    } else {
+          document.location.href = "confirmation.html";
+ 
+        })
+        .catch((err) => {
+          alert("Problème avec fetch : " + err.message);
+        });
+    } else {
       //si isFormValid est égal à false, envoi d'un message d'erreur
       alert(
         "Le formulaire n'est pas renseigné correctement. Veuillez vérifier votre saisie!"

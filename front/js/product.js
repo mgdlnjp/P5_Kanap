@@ -83,33 +83,29 @@ function addProduct(res) {
   let getBas = getBasket();
 
   let productIMG = res;
-/*   console.log(productIMG);
- */
+  /*   console.log(productIMG);
+   */
   let imgRes = productIMG.imageUrl;
-/*   console.log(imgRes);
- */
+  /*   console.log(imgRes);
+   */
   btn_addPanier.addEventListener("click", () => {
     let title = document.getElementById("title");
     let price = document.getElementById("price");
     let colorsValue = document.getElementById("colors");
     let quantityValue = document.getElementById("quantity");
-    let id  = idProduct;
-/*     let imgURL = document.getElementsByClassName("item__img")[0];
+    let id = idProduct;
+    /*     let imgURL = document.getElementsByClassName("item__img")[0];
     console.log(imgURL); */
 
-
-
     let ttl = title.textContent;
-/*     let pri = price.textContent;
- */    let col = colorsValue.value;
+    /*     let pri = price.textContent;
+     */ let col = colorsValue.value;
     let qt = quantityValue.value;
 
     let imgurl = imgRes;
     console.log(imgurl);
 
-
-
-/* 
+    /* 
     let img = productIMG.imageUrl;
     console.log(img); */
 
@@ -117,21 +113,24 @@ function addProduct(res) {
      */
 
     let monArticle = {
-      id:idProduct,
+      id: idProduct,
       title: ttl,
       quantityValue: qt,
       colorsValue: col,
-/*       price: pri,
- */      imgURL: imgurl,
+      /*       price: pri,
+       */ imageUrl: imgurl,
     };
+
+    let header = document.querySelectorAll("limitedWidthBlock");
+
 
     let foundBas = getBas.find(
       (p) =>
         p.title == monArticle.title &&
         p.colorsValue == monArticle.colorsValue &&
-/*         p.price == monArticle.price &&
- */        p.imgURL == monArticle.imgURL &&
- p.id == monArticle.id
+        /*         p.price == monArticle.price &&
+         */ p.imgURL == monArticle.imgURL &&
+        p.id == monArticle.id
     );
 
     if (monArticle.quantityValue === "0") {
@@ -149,8 +148,13 @@ function addProduct(res) {
               parseInt(monArticle.quantityValue);
           } else {
             getBas.push(monArticle);
+            
             console.log(getBas);
+
+            header.innerHTML = "quantité";
           }
+          document.location.href = "cart.html";
+
           saveBasket(getBas);
         }
       }
