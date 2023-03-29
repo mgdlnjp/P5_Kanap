@@ -1,8 +1,16 @@
 let orderId = document.querySelector("#orderId");
+console.log(orderId);
+let key = localStorage.key(2);
+console.log(key);
+let orderNumber = localStorage.getItem("orderId");
+console.log(orderNumber);
 
-/* Affichage du numéro de commande */
-orderId.innerHTML = localStorage.getItem("orderId");
+function orderConfirmation() {
+  const url = new URL(window.location.href);
+  url.searchParams.set(key, orderNumber);
+  window.history.pushState({ path: url.href }, "", url.href);
+  orderId.innerHTML = orderNumber;
+  localStorage.clear();
+}
 
-/* Suppression des datas de la commande dans le localStorage */
-localStorage.clear();
-          
+orderConfirmation();
