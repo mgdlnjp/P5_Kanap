@@ -28,7 +28,7 @@ function GetKanaps(url) {
     
   for (let article in articles) {
 
-    if (1 === 1) {
+    if (article) {
 
       /* variable caracteristique produit */
       let m_id = res[article]._id;
@@ -48,35 +48,11 @@ function GetKanaps(url) {
       </a>`;
     }
 
-    if (1 === 2) {
-      // Insertion de l'élément "a"
-      let productLink = document.createElement("a");
-      document.querySelector(".items").appendChild(productLink);
-      productLink.href = `product.html?id=${m_id}`;
+    else {
+      alert("pas de produit disponible");
+    };
 
-      // Insertion de l'élément "article"
-      let productArticle = document.createElement("article");
-      productLink.appendChild(productArticle);
-
-      // Insertion de l'image
-      let productImg = document.createElement("img");
-      productArticle.appendChild(productImg);
-      productImg.src = res[article].imageUrl;
-      productImg.alt = res[article].altTxt;
-
-      // Insertion du titre "h3"
-      let productName = document.createElement("h3");
-      productArticle.appendChild(productName);
-      productName.classList.add("productName");
-      productName.innerHTML = res[article].name;
-
-      // Insertion de la description "p"
-      let productDescription = document.createElement("p");
-      productArticle.appendChild(productDescription);
-      productDescription.classList.add("productName");
-      productDescription.innerHTML = res[article].description;
-    }
-  }
+  };
 
   let doc = document.getElementById("items");
   doc.innerHTML = prep;
