@@ -1,7 +1,5 @@
 let orderId = document.querySelector("#orderId");
 console.log(orderId);
-let key = localStorage.key(2);
-console.log(key);
 let orderNumber = localStorage.getItem("orderId");
 console.log(orderNumber);
 
