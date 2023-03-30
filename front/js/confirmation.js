@@ -7,8 +7,7 @@ console.log(orderNumber);
 
 function orderConfirmation() {
   const url = new URL(window.location.href);
-  url.searchParams.set(key, orderNumber);
-  window.history.pushState({ path: url.href }, "", url.href);
+  url.searchParams.get("id");
   orderId.innerHTML = orderNumber;
   localStorage.clear();
 }

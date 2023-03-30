@@ -287,7 +287,7 @@ function postForm() {
 
           localStorage.setItem("orderId", data.orderId);
 
-          document.location.href = "confirmation.html";
+          document.location.href = "confirmation.html?id=" + data.orderId;
  
         })
         .catch((err) => {
