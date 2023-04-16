@@ -212,8 +212,8 @@ function postForm() {
       );
 
 
-    /* 1 - Si la formulaire est true... */
-    if ((isFormValid = true)) {
+    /* 1 - Si isFormValid = true... */
+    if ((isFormValid)) {
       const formData = {
         firstName: firstNameInput,
         lastName: lastNameInput,
@@ -256,9 +256,9 @@ function postForm() {
           alert("Problème avec fetch : " + err.message);
         });
     } else {
-      /* 2 - Si la formulaire est false, on lance une alerte pour l'utilisateur */
+      /* 2 - Si isFormValid = false... */
       alert(
-        "Le formulaire n'est pas renseigné correctement. Veuillez vérifier votre saisie!"
+        "Le formulaire n'est pas renseigné correctement. Veuillez vérifier votre saisie!" /* ...On lance une alerte pour l'utilisateur */
       );
     }
   });
