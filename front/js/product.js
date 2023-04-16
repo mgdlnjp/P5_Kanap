@@ -6,7 +6,6 @@ let prep = "";
 GetProduct();
 
 /* Pour appeler tous les produits sur le JSON */
-
 function GetProduct() {
   fetch(`http://localhost:3000/api/products/` + idProduct)
     .then((res) => {
@@ -25,7 +24,6 @@ function GetProduct() {
 }
 
 /* Pour afficher les produits du JSON dans la page */
-
 function afficheKanap(res) {
   const product = res;
 
@@ -35,7 +33,6 @@ function afficheKanap(res) {
   let m_description = product.description;
 
   /* Variable produits du JSON */
-
   preptitle = '<h1 id="title">' + m_name + "</h1>";
   prepprice = `<span id="price">${m_price}</span>`;
   prepdescription = `<p id="description">${m_description}</p>`;
@@ -60,12 +57,11 @@ function afficheKanap(res) {
   addProduct(res);
 }
 
-/* Il faut sauver le produit dans le localstorage au moment de l'ajout */
+/* ------------ Il faut sauver le produit dans le localstorage au moment de l'ajout ------------*/
 
 function saveBasket(getBas) {
   localStorage.setItem("basket", JSON.stringify(getBas));
 }
-
 function getBasket() {
   let getBas = localStorage.getItem("basket");
   if (getBas == null) {
@@ -75,8 +71,9 @@ function getBasket() {
   }
 }
 
-/* Fonction qui ajoute le produit dans le panier */
+/* ------------------------------------------------------------------------------------------- */
 
+/* Fonction qui ajoute le produit dans le panier */
 function addProduct(res) {
   const btn_addPanier = document.getElementById("addToCart");
 
@@ -94,10 +91,8 @@ function addProduct(res) {
     let qt = quantityValue.value;
 
     let imgurl = imgRes;
-    console.log(imgurl);
 
     /* Variables qui recupére les données de l'article */
-
     let monArticle = {
       id: idProduct,
       title: ttl,
@@ -117,7 +112,6 @@ function addProduct(res) {
     );
 
     /* Différentes conditions pour l'ajout des options */
-
     if (monArticle.quantityValue === "0") {
       alert("Veuillez ajouter une quantité");
     } else {
@@ -133,9 +127,6 @@ function addProduct(res) {
               parseInt(monArticle.quantityValue);
           } else {
             getBas.push(monArticle);
-
-            console.log(getBas);
-
             header.innerHTML = "quantité";
           }
           saveBasket(getBas);
