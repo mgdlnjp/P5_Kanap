@@ -1,13 +1,12 @@
 let orderId = document.querySelector("#orderId");
-console.log(orderId);
-let orderNumber = localStorage.getItem("orderId");
-console.log(orderNumber);
+
+/* Affichage du numéro de commande récupérer dans l'url */
 
 function orderConfirmation() {
   const url = new URL(window.location.href);
-  url.searchParams.get("id");
-  orderId.innerHTML = orderNumber;
-  localStorage.clear();
+  orderId.innerHTML = url.searchParams.get("id");
+  
+  localStorage.clear(); /* On vide le localstorage une fois la commande passée par sécurité */
 }
 
 orderConfirmation();

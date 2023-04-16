@@ -29,9 +29,6 @@ function GetProduct() {
 function afficheKanap(res) {
   const product = res;
 
-  /*   localStorage.setItem("product", JSON.stringify(product));
-   */
-
   let m_image = product.imageUrl;
   let m_name = product.name;
   let m_price = product.price;
@@ -63,7 +60,7 @@ function afficheKanap(res) {
   addProduct(res);
 }
 
-/* Ajouter produit dans le panier */
+/* Il faut sauver le produit dans le localstorage au moment de l'ajout */
 
 function saveBasket(getBas) {
   localStorage.setItem("basket", JSON.stringify(getBas));
@@ -78,60 +75,48 @@ function getBasket() {
   }
 }
 
+/* Fonction qui ajoute le produit dans le panier */
+
 function addProduct(res) {
   const btn_addPanier = document.getElementById("addToCart");
-  let getBas = getBasket();
 
+  let getBas = getBasket();
   let productIMG = res;
-  /*   console.log(productIMG);
-   */
   let imgRes = productIMG.imageUrl;
-  /*   console.log(imgRes);
-   */
+
   btn_addPanier.addEventListener("click", () => {
     let title = document.getElementById("title");
-    let price = document.getElementById("price");
     let colorsValue = document.getElementById("colors");
     let quantityValue = document.getElementById("quantity");
-    let id = idProduct;
-    /*     let imgURL = document.getElementsByClassName("item__img")[0];
-    console.log(imgURL); */
 
     let ttl = title.textContent;
-    /*     let pri = price.textContent;
-     */ let col = colorsValue.value;
+    let col = colorsValue.value;
     let qt = quantityValue.value;
 
     let imgurl = imgRes;
     console.log(imgurl);
 
-    /* 
-    let img = productIMG.imageUrl;
-    console.log(img); */
-
-    /*     let id = idProduct;
-     */
+    /* Variables qui recupére les données de l'article */
 
     let monArticle = {
       id: idProduct,
       title: ttl,
       quantityValue: qt,
       colorsValue: col,
-      /*       price: pri,
-       */ imageUrl: imgurl,
+      imageUrl: imgurl,
     };
 
     let header = document.querySelectorAll("limitedWidthBlock");
-
 
     let foundBas = getBas.find(
       (p) =>
         p.title == monArticle.title &&
         p.colorsValue == monArticle.colorsValue &&
-        /*         p.price == monArticle.price &&
-         */ p.imgURL == monArticle.imgURL &&
+        p.imgURL == monArticle.imgURL &&
         p.id == monArticle.id
     );
+
+    /* Différentes conditions pour l'ajout des options */
 
     if (monArticle.quantityValue === "0") {
       alert("Veuillez ajouter une quantité");
@@ -148,13 +133,11 @@ function addProduct(res) {
               parseInt(monArticle.quantityValue);
           } else {
             getBas.push(monArticle);
-            
+
             console.log(getBas);
 
             header.innerHTML = "quantité";
           }
-          document.location.href = "cart.html";
-
           saveBasket(getBas);
         }
       }

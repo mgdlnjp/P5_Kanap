@@ -49,7 +49,7 @@ function GetKanaps(url) {
     }
 
     else {
-      alert("pas de produit disponible");
+      alert("Pas de produit disponible");
     };
 
   };

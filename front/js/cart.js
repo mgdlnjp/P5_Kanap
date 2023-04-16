@@ -1,15 +1,8 @@
 let basketLocalStorage = JSON.parse(localStorage.getItem("basket"));
-console.log(basketLocalStorage);
-
 let formLocalStorage = JSON.parse(localStorage.getItem("form"));
-console.log(formLocalStorage);
-
-/* let resLocalStorage = JSON.parse(localStorage.getItem("res"));
-console.log(resLocalStorage); */
-
 let positionEmptyCart = document.getElementById("cart__items");
-console.log(positionEmptyCart);
 
+/* fonction panier vide */
 function getCart() {
   if (basketLocalStorage === null || basketLocalStorage === 0) {
     positionEmptyCart.innerHTML = `<p>Votre panier est vide</p>`;
@@ -18,48 +11,30 @@ function getCart() {
   }
 }
 
+/* fonction asynchrone de l'affichage du panier */
 async function afficheCart() {
   let product = basketLocalStorage.find((e) => e === basketLocalStorage[0]);
-  console.log(product);
-
   let sum = 0;
-  console.log(sum);
 
+  /* boucle produit en récupérant l'id et les autres propriétés (prix couleur quantité etc) */
   for (let product of basketLocalStorage) {
-    /*     let kanap = resLocalStorage;
-    console.log(kanap); */
-
     let m_title = product.title;
-    console.log(product.title);
-
     let m_color = product.colorsValue;
-    console.log(product.colorsValue);
-
     let m_quantity = product.quantityValue;
-    console.log(product.quantityValue);
-
     let m_image = product.imageUrl;
-    console.log(product.imageUrl);
-
     let m_id = product.id;
-    /*     console.log(m_id);
-     */
+
+    /* Variable servant à récuperer la fonction asynchrone de récupération du prix */
     const article = await fetchPrice(m_id);
-    console.log(article);
 
     let m_price = article.price;
-    /*     console.log(m_price);
-     */
-
     let priceProduct = m_quantity * m_price;
-    console.log(priceProduct);
 
+    /* Calcul du total panier */
     let totalPrice = document.querySelector("#totalPrice");
-    console.log(totalPrice);
-
     sum = sum + priceProduct;
-    console.log(sum);
 
+    /* Affichage de la boucle dans la page HTML */
     positionEmptyCart.innerHTML += `<article class="cart__item" data-id="{product-ID}" data-color="{product-color}">
     <div class="cart__item__img" id="${m_image}">
       <img src="${m_image}"  alt="Photographie d'un canapé">
@@ -83,6 +58,7 @@ async function afficheCart() {
   </article>`;
   }
 
+  /* Affichage du total panier */
   totalPrice.innerHTML = sum;
 
   removeItem(product);
@@ -90,6 +66,7 @@ async function afficheCart() {
   postForm();
 }
 
+/* Fonction asynchrone de récupération du prix */
 async function fetchPrice(id) {
   return fetch(`http://localhost:3000/api/products/` + id)
     .then((res) => {
@@ -100,40 +77,32 @@ async function fetchPrice(id) {
     });
 }
 
+/* Fonction suppression du produit afficher dans le panier */
 function removeItem() {
   let deleteItem = document.querySelectorAll(".deleteItem");
-  console.log(deleteItem);
 
   deleteItem.forEach((element) => {
     element.addEventListener("click", (e) => {
       e.preventDefault();
       let myTitle = e.target.getAttribute("id");
-      console.log(myTitle);
-
       let myColor = e.target.getAttribute("value");
-      console.log(myColor);
 
+      /* Variable qui récupere toutes les données du canapé qui va être supprimer */
       let kanap = basketLocalStorage.find(
         (p) => p.title == myTitle && p.colorsValue == myColor
       );
 
-      /* regarder indexOF */
       const ligne = basketLocalStorage.indexOf(kanap);
-      console.log(ligne);
 
-      console.log(kanap);
-
-      /* regarder splice */
+      /* Utilisation de la méthode splice pour supprimer la ligne produit selectionner par la variable kanap  */
       basketLocalStorage.splice(ligne, 1);
-      console.log(basketLocalStorage);
-
       localStorage.setItem("basket", JSON.stringify(basketLocalStorage));
-
       location.reload();
     });
   });
 }
 
+/* Fonction modification quantité du produit afficher dans le panier */
 function modifyItem() {
   let itemQuantity = document.querySelectorAll(".itemQuantity");
 
@@ -142,23 +111,18 @@ function modifyItem() {
       event.preventDefault();
 
       let quantityModify = basketLocalStorage[p].quantityValue;
-      console.log(quantityModify);
       let itemQuantityValue = itemQuantity[p].valueAsNumber;
-      console.log(itemQuantityValue);
 
       let myTitle = event.target.getAttribute("data-id");
-      console.log(myTitle);
-
       let myColor = event.target.getAttribute("data-color");
-      console.log(myColor);
 
       const resultFind = basketLocalStorage.find(
         (e) => e.title == myTitle && e.colorsValue == myColor
       );
-      console.log(resultFind);
 
+      /* Update de la quantité dans le panier */
       resultFind.quantityValue = itemQuantityValue;
-      basketLocalStorage[p].quantityValue = resultFind.quantityValue;
+      quantityModify = resultFind.quantityValue;
 
       localStorage.setItem("basket", JSON.stringify(basketLocalStorage));
 
@@ -171,41 +135,42 @@ function modifyItem() {
   }
 }
 
+/* Fonction pour valider le formulaire et la commande */
 function postForm() {
-  //Préparation des regles pour verifier les champs du formulaire
+  /* Variables des régles de vérification des champs du formulaire (regex) */
   let charRegExp = new RegExp("^[a-zA-Z ,.'-]+$");
-  let addressRegExp = new RegExp("[A-Za-z0-9s'À-ÖØ-öø-ÿ]*$"); //Ce regex autorise les chiffres en début de ligne
+  let addressRegExp = new RegExp("[A-Za-z0-9s'À-ÖØ-öø-ÿ]*$");
   let emailRegExp = new RegExp(
     "^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$"
   );
 
-  //début du message à afficher en cas d'erreur
   let champs = "Veuillez renseigner ";
-
-  // Get the submit button
   const orderBtn = document.querySelector("#order");
-  //console.log(orderBtn);
 
-  // Listen to click event on submit button
   orderBtn.addEventListener("click", (event) => {
-    event.preventDefault(); // prevent form from submitting
+    event.preventDefault();
 
-    // Récupération des valeurs du formaulaire
+    /* Variables des valeurs du formulaire */
     const firstNameInput = document.querySelector("#firstName").value;
     const lastNameInput = document.querySelector("#lastName").value;
     const addressInput = document.querySelector("#address").value;
     const cityInput = document.querySelector("#city").value;
     const emailInput = document.querySelector("#email").value;
 
-    //La fonction suivante permet de valider les champs que je lui passe en parametre. Elle retourne true ou false
-    //input = le champ que je veux traiter
-    //regex = l'expression réguliere que je veux comparer au champ input
-    //errorMessage = le message d'erreur que je veux afficher
-    //baliseError = l'id de la base du front que je veux remplacer pour afficher le message
-    function validateInput(input, regex, errorMessage, baliseError) {
+    /* Fonction qui permet de valider les champs (valeur booléenne) */
+    function validateInput(
+      input,
+      /* input = le champ que je veux traiter */
+      regex,
+      /* regex = l'expression réguliere que je veux comparer au champ input */
+      errorMessage,
+      /* errorMessage = le message d'erreur que je veux afficher */
+      baliseError
+      /* baliseError = l'id de la base du front que je veux remplacer pour afficher le message */
+    ) {
       let errorMsg = document.getElementById(baliseError);
       if (regex.test(input)) {
-        errorMsg.innerHTML = ""; //Ici le message d'erreur est remit à blanc
+        errorMsg.innerHTML = "";
         return true;
       } else {
         errorMsg.innerHTML = errorMessage;
@@ -213,8 +178,7 @@ function postForm() {
       }
     }
 
-    //Controler tous les champs.
-    //Lorsque toutes les validations seront à true, la commande pourra être passée
+    /* Variable booléenne qui contrôle tous les champs du formulaire par la fonction validateInput */
     let isFormValid =
       validateInput(
         firstNameInput,
@@ -247,8 +211,9 @@ function postForm() {
         "addressErrorMsg"
       );
 
-    if (isFormValid) {
-      //si isFormValid est égal à true, alors tous les champs du formulaire sont valides
+
+    /* 1 - Si la formulaire est true... */
+    if ((isFormValid = true)) {
       const formData = {
         firstName: firstNameInput,
         lastName: lastNameInput,
@@ -267,10 +232,11 @@ function postForm() {
         products: prodId,
       };
 
-      console.log(sendData);
-
+      /* ...Toutes les données sont envoyées dans le localstorage... */
       localStorage.setItem("formData", JSON.stringify(sendData));
 
+
+      /* ...Et utilisées par la methode "POST"... */
       const options = {
         method: "POST",
         body: JSON.stringify(sendData),
@@ -280,21 +246,17 @@ function postForm() {
         },
       };
 
+      /* ...Pour  être récupérer dans l'API (JSON) et résumer sous la forme d'une ID par la méthode FETCH */
       fetch("http://localhost:3000/api/products/order", options)
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
-
-          localStorage.setItem("orderId", data.orderId);
-
           document.location.href = "confirmation.html?id=" + data.orderId;
- 
         })
         .catch((err) => {
           alert("Problème avec fetch : " + err.message);
         });
     } else {
-      //si isFormValid est égal à false, envoi d'un message d'erreur
+      /* 2 - Si la formulaire est false, on lance une alerte pour l'utilisateur */
       alert(
         "Le formulaire n'est pas renseigné correctement. Veuillez vérifier votre saisie!"
       );
