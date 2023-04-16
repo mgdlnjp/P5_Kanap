@@ -6,7 +6,7 @@ function orderConfirmation() {
   const url = new URL(window.location.href);
   orderId.innerHTML = url.searchParams.get("id");
   
-  localStorage.clear(); /* On vide le localstorage une fois la commande passée par sécurité */
+  localStorage.clear(); /* On vide le localstorage une fois la commande passée par mesure de sécurité */
 }
 
 orderConfirmation();
