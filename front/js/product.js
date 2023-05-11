@@ -32,32 +32,50 @@ function afficheKanap(res) {
   let m_price = product.price;
   let m_description = product.description;
 
-  /* Variable produits du JSON */
-  preptitle = '<h1 id="title">' + m_name + "</h1>";
-  prepprice = `<span id="price">${m_price}</span>`;
-  prepdescription = `<p id="description">${m_description}</p>`;
-  prepitem__img = `<div class="item__img"> <img src=${m_image}> </div>`;
+  /* Préparation des Variables produits du JSON */
+  preptitle = document.createElement("h1"); //En utilisant la méthode createElement
+  preptitle.setAttribute("id", "title"); //En ajoutant les attibuts des balise créees
+  preptitle.innerText = m_name; //Et la propriéte innerText
+
+  prepprice = document.createElement("span");
+  prepprice.setAttribute("id", "price");
+  prepprice.innerText = m_price;
+
+  prepdescription = document.createElement("p");
+  prepdescription.setAttribute("id", "description");
+  prepdescription.innerText = m_description;
+
+  prepitem__img = document.createElement("div");
+  prepitem__img.setAttribute("class", "item__img");
+  const img = document.createElement("img");
+  img.setAttribute("src", m_image);
+  prepitem__img.appendChild(img);
 
   /* Insertion des variables */
   let title = document.getElementById("title");
+  title.parentNode.replaceChild(preptitle, title);
+
   let price = document.getElementById("price");
+  price.parentNode.replaceChild(prepprice, price);
+
   let description = document.getElementById("description");
+  description.parentNode.replaceChild(prepdescription, description);
+
   let item__img = document.getElementsByClassName("item__img");
+  item__img[0].parentNode.replaceChild(prepitem__img, item__img[0]);
 
-  title.innerHTML = preptitle;
-  price.innerHTML = prepprice;
-  description.innerHTML = prepdescription;
-  item__img[0].innerHTML = prepitem__img;
-
-  /* Insertion de la couleur */
+  /* Insertion de la sélection des couleurs */
+  const colorsValue = document.getElementById("colors");
   for (let colors of product.colors) {
-    let colorsValue = document.getElementById("colors");
-    colorsValue.innerHTML += `<option value="${colors}">${colors}</option>`;
+    const option = document.createElement("option");
+    option.setAttribute("value", colors);
+    option.innerText = colors;
+    colorsValue.appendChild(option);
   }
   addProduct(res);
 }
 
-/* ------------ Il faut sauver le produit dans le localstorage au moment de l'ajout ------------*/
+/* ------------ Il faut sauver le produit dans le localStorage au moment de l'ajout ------------*/
 
 function saveBasket(getBas) {
   localStorage.setItem("basket", JSON.stringify(getBas));
@@ -71,20 +89,21 @@ function getBasket() {
   }
 }
 
-/* ------------------------------------------------------------------------------------------- */
-
-/* Fonction qui ajoute le produit dans le panier */
+/* Ajout des produit dans le panier */
 function addProduct(res) {
   const btn_addPanier = document.getElementById("addToCart");
-
   let getBas = getBasket();
+
   let productIMG = res;
+
   let imgRes = productIMG.imageUrl;
 
   btn_addPanier.addEventListener("click", () => {
     let title = document.getElementById("title");
+    let price = document.getElementById("price");
     let colorsValue = document.getElementById("colors");
     let quantityValue = document.getElementById("quantity");
+    let id = idProduct;
 
     let ttl = title.textContent;
     let col = colorsValue.value;
@@ -111,25 +130,55 @@ function addProduct(res) {
         p.id == monArticle.id
     );
 
-    /* Différentes conditions pour l'ajout des options */
-    if (monArticle.quantityValue === "0") {
-      alert("Veuillez ajouter une quantité");
-    } else {
-      if (parseInt(monArticle.quantityValue) > 100) {
-        alert("Nombre max de canapé atteint");
+
+    //Condition à valider avant l'ajout dans le localstorage et Panier
+    let onContinu = false;
+    if (foundBas) {
+      if (
+        parseInt(foundBas.quantityValue) + parseInt(monArticle.quantityValue) >
+        100
+      ) {
+        alert("Nombre max de canapé atteint"); //Quantité limitée à 100 canapés total
+        onContinu = false;
       } else {
-        if (monArticle.colorsValue === "") {
-          alert("Veuillez ajouter une couleur");
+        onContinu = true;
+      }
+    } else {
+      onContinu = true;
+    }
+
+    /* Différentes conditions pour l'ajout des options */
+    if (onContinu) {
+      if (monArticle.quantityValue === "0") { //Quantité de 1 à 100canapé total
+        alert("Veuillez ajouter une quantité");
+      } else {
+        if (parseInt(monArticle.quantityValue) < 0) { //Pour éviter les quantités négatives
+          alert("Pas de quantité négative");
         } else {
-          if (foundBas) {
-            foundBas.quantityValue =
-              parseInt(foundBas.quantityValue) +
-              parseInt(monArticle.quantityValue);
+          if (parseInt(monArticle.quantityValue) > 100) { //Quantité limitée à 100 canapés total
+            alert("Nombre max de canapé atteint");
           } else {
-            getBas.push(monArticle);
-            header.innerHTML = "quantité";
+            if (monArticle.colorsValue === "") {//Couleur obligatoire
+              alert("Veuillez ajouter une couleur");
+            } else {
+              if (!/^\d+$/.test(monArticle.quantityValue)) { //Pour éviter les quantités décimales
+                alert("La quantité doit être un nombre entier");
+              } else {
+                //Une fois les conditions valides : ajout dans le localstorage et Panier
+                if (foundBas) {
+                  foundBas.quantityValue =
+                    parseInt(foundBas.quantityValue) +
+                    parseInt(monArticle.quantityValue);
+                } else {
+                  getBas.push(monArticle);
+                  header.innerHTML = "quantité";
+                }
+                document.location.href = "cart.html"; //Et affichage des produits dans le Panier
+                saveBasket(getBas);
+                alert("Canapé ajouté au panier");
+              }
+            }
           }
-          saveBasket(getBas);
         }
       }
     }

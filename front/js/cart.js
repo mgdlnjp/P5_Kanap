@@ -26,7 +26,6 @@ async function afficheCart() {
 
     /* Variable servant à récuperer la fonction asynchrone de récupération du prix */
     const article = await fetchPrice(m_id);
-
     let m_price = article.price;
     let priceProduct = m_quantity * m_price;
 
@@ -34,28 +33,86 @@ async function afficheCart() {
     let totalPrice = document.querySelector("#totalPrice");
     sum = sum + priceProduct;
 
-    /* Affichage de la boucle dans la page HTML */
-    positionEmptyCart.innerHTML += `<article class="cart__item" data-id="{product-ID}" data-color="{product-color}">
-    <div class="cart__item__img" id="${m_image}">
-      <img src="${m_image}"  alt="Photographie d'un canapé">
-    </div>
-    <div class="cart__item__content" id="${m_title}">
-      <div class="cart__item__content__description" id="${m_color}">
-        <h2>${m_title}</h2>
-        <p>${m_color}</p>
-        <p>${m_price}€</p>
-      </div>
-      <div class="cart__item__content__settings">
-        <div class="cart__item__content__settings__quantity">
-          <p>Qté : </p>
-          <input type="number"  data-id="${m_title}" data-color="${m_color}" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${m_quantity}">
-        </div>
-        <div class="cart__item__content__settings__delete">
-          <p class="deleteItem" id="${m_title}" value="${m_color}" >Supprimer</p>
-        </div>
-      </div>
-    </div>
-  </article>`;
+    //Creation de la section cart__items
+    const articleHTML = document.createElement("article"); //En utilisant la méthode createElement
+    articleHTML.classList.add("cart__item"); //En ajoutant les class ou id
+    articleHTML.setAttribute("data-id", product.id); //Et les attibuts de ces derniers
+    articleHTML.setAttribute("data-color", m_color);
+
+    const divImg = document.createElement("div");
+    divImg.classList.add("cart__item__img");
+    divImg.setAttribute("id", m_image);
+
+    const img = document.createElement("img");
+    img.setAttribute("src", m_image);
+    img.setAttribute("alt", "Photographie d'un canapé");
+
+    divImg.appendChild(img);
+
+    const divContent = document.createElement("div");
+    divContent.classList.add("cart__item__content");
+    divContent.setAttribute("id", m_title);
+
+    const divDescription = document.createElement("div");
+    divDescription.classList.add("cart__item__content__description");
+    divDescription.setAttribute("id", m_color);
+
+    const h2 = document.createElement("h2");
+    h2.innerText = m_title; //Ou en ajoutant simplement du texte dans certaines balises
+
+    const p1 = document.createElement("p");
+    p1.innerText = m_color;
+
+    const p2 = document.createElement("p");
+    p2.innerText = `${m_price}€`;
+
+    divDescription.appendChild(h2); //Affichage de la boucle dans la page HTML avec la méthode appendchild
+    divDescription.appendChild(p1);
+    divDescription.appendChild(p2);
+
+    const divSettings = document.createElement("div");
+    divSettings.classList.add("cart__item__content__settings");
+
+    const divQuantity = document.createElement("div");
+    divQuantity.classList.add("cart__item__content__settings__quantity");
+
+    const p3 = document.createElement("p");
+    p3.innerText = "Qté : ";
+
+    const input = document.createElement("input");
+    input.setAttribute("type", "number");
+    input.setAttribute("data-id", m_title);
+    input.setAttribute("data-color", m_color);
+    input.classList.add("itemQuantity");
+    input.setAttribute("name", "itemQuantity");
+    input.setAttribute("min", "1");
+    input.setAttribute("max", "100");
+    input.setAttribute("value", m_quantity);
+
+    divQuantity.appendChild(p3);
+    divQuantity.appendChild(input);
+
+    const divDelete = document.createElement("div");
+    divDelete.classList.add("cart__item__content__settings__delete");
+
+    const p4 = document.createElement("p");
+    p4.classList.add("deleteItem");
+    p4.setAttribute("id", m_title);
+    p4.setAttribute("value", m_color);
+    p4.innerText = "Supprimer";
+
+    divDelete.appendChild(p4);
+
+    divSettings.appendChild(divQuantity);
+    divSettings.appendChild(divDelete);
+
+    divContent.appendChild(divDescription);
+    divContent.appendChild(divSettings);
+
+    articleHTML.appendChild(divImg);
+    articleHTML.appendChild(divContent);
+
+    positionEmptyCart.appendChild(articleHTML);
   }
 
   /* Affichage du total panier */
@@ -92,6 +149,7 @@ function removeItem() {
         (p) => p.title == myTitle && p.colorsValue == myColor
       );
 
+      /* Utilisation de la méthode indexOf pour récupérer la ligne à supp */
       const ligne = basketLocalStorage.indexOf(kanap);
 
       /* Utilisation de la méthode splice pour supprimer la ligne produit selectionner par la variable kanap  */
@@ -104,6 +162,7 @@ function removeItem() {
 
 /* Fonction modification quantité du produit afficher dans le panier */
 function modifyItem() {
+  let onContinu = true;
   let itemQuantity = document.querySelectorAll(".itemQuantity");
 
   for (let p = 0; p < itemQuantity.length; p++) {
@@ -113,23 +172,35 @@ function modifyItem() {
       let quantityModify = basketLocalStorage[p].quantityValue;
       let itemQuantityValue = itemQuantity[p].valueAsNumber;
 
-      let myTitle = event.target.getAttribute("data-id");
-      let myColor = event.target.getAttribute("data-color");
-
-      const resultFind = basketLocalStorage.find(
-        (e) => e.title == myTitle && e.colorsValue == myColor
-      );
-
-      /* Update de la quantité dans le panier */
-      resultFind.quantityValue = itemQuantityValue;
-      quantityModify = resultFind.quantityValue;
-
-      localStorage.setItem("basket", JSON.stringify(basketLocalStorage));
-
-      if (itemQuantityValue == "0") {
-        alert("Veuillez saisir une quantité supérieur à zéro");
+      //Condition mise en place pour éviter la saisie de :
+      if (!Number.isInteger(itemQuantityValue)) {
+        //quantité décimal
+        alert("Veuillez saisir un nombre entier");
+        onContinu = false;
+      } else if (itemQuantityValue <= 0 || itemQuantityValue > 100) {
+        //quantité négative
+        alert(
+          "Veuillez saisir une quantité supérieure à zéro ou inférieure à 100"
+        );
+        onContinu = false;
+        itemQuantity.value = 1; // en remettant la valeur initiale une fois l'alerte envoyée
+      } else {
+        onContinu = true;
       }
 
+      //Condition une fois que les données sont bonnes pour modifier les produits
+      if (onContinu) {
+        let myTitle = event.target.getAttribute("data-id");
+        let myColor = event.target.getAttribute("data-color");
+
+        const resultFind = basketLocalStorage.find(
+          (e) => e.title == myTitle && e.colorsValue == myColor
+        );
+
+        resultFind.quantityValue = itemQuantityValue;
+        basketLocalStorage[p].quantityValue = resultFind.quantityValue;
+        localStorage.setItem("basket", JSON.stringify(basketLocalStorage));
+      }
       location.reload();
     });
   }
@@ -137,20 +208,24 @@ function modifyItem() {
 
 /* Fonction pour valider le formulaire et la commande */
 function postForm() {
-  /* Variables des régles de vérification des champs du formulaire (regex) */
-  let charRegExp = new RegExp("^[a-zA-Z ,.'-]+$");
-  let addressRegExp = new RegExp("[A-Za-z0-9s'À-ÖØ-öø-ÿ]*$");
+  //Préparation des regles pour verifier les champs du formulaire
+  let addressRegExp = /^[A-Za-z'sÀ-ÖØ-öø-ÿ\s]+$/;
+  let charRegExp = /^[a-zA-Z ,.\-\s]+$/;
+  //Variable possible let addressRegExp = new RegExp("[A-Za-z0-9s'À-ÖØ-öø-ÿ]*$"); //Ce regex autorise les chiffres en début de ligne
   let emailRegExp = new RegExp(
     "^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$"
-  );
-
+    );
+    
+  //début du message à afficher en cas d'erreur
   let champs = "Veuillez renseigner ";
+
   const orderBtn = document.querySelector("#order");
 
+  // tout ce qui se passe au moment de la validation du formulaire
   orderBtn.addEventListener("click", (event) => {
-    event.preventDefault();
+    event.preventDefault(); // evenement par défaut au moment de la validation du formulaire
 
-    /* Variables des valeurs du formulaire */
+    // Récupération des valeurs du formaulaire
     const firstNameInput = document.querySelector("#firstName").value;
     const lastNameInput = document.querySelector("#lastName").value;
     const addressInput = document.querySelector("#address").value;
@@ -160,26 +235,32 @@ function postForm() {
     /* Fonction qui permet de valider les champs (valeur booléenne) */
     function validateInput(
       input,
-      /* input = le champ que je veux traiter */
+      //input = le champ que je veux traiter
       regex,
-      /* regex = l'expression réguliere que je veux comparer au champ input */
+      //regex = l'expression réguliere que je veux comparer au champ input
       errorMessage,
-      /* errorMessage = le message d'erreur que je veux afficher */
+      //errorMessage = le message d'erreur que je veux afficher
       baliseError
-      /* baliseError = l'id de la base du front que je veux remplacer pour afficher le message */
+      //baliseError = l'id de la base du front que je veux remplacer pour afficher le message
     ) {
+      //Conditions prise en compte pour l'affichage du message d'erreur en cas de non validation du regex
       let errorMsg = document.getElementById(baliseError);
       if (regex.test(input)) {
         errorMsg.innerHTML = "";
         return true;
       } else {
-        errorMsg.innerHTML = errorMessage;
+        errorMsg.innerHTML =
+          errorMessage +
+          " (Merci de ne mettre : ni chiffres, ni majuscules, ni apostrophes ou symbole égal mathématique)";
+        setTimeout(() => {
+          location.reload();
+        }, 6000); // rechargement après 6 secondes le temps de lire le message d'erreur
         return false;
       }
     }
 
     /* Variable booléenne qui contrôle tous les champs du formulaire par la fonction validateInput */
-    let isFormValid =
+    let isFormValid = //Lorsque toutes les validateInput seront à true...
       validateInput(
         firstNameInput,
         charRegExp,
@@ -211,9 +292,9 @@ function postForm() {
         "addressErrorMsg"
       );
 
-
-    /* 1 - Si isFormValid = true... */
-    if ((isFormValid)) {
+    //... la commande pourra être passée ...
+    if (isFormValid) {
+      //... si isFormValid est égal à true, alors tous les champs du formulaire sont valides
       const formData = {
         firstName: firstNameInput,
         lastName: lastNameInput,
@@ -232,9 +313,10 @@ function postForm() {
         products: prodId,
       };
 
+      console.log(sendData);
+
       /* ...Toutes les données sont envoyées dans le localstorage... */
       localStorage.setItem("formData", JSON.stringify(sendData));
-
 
       /* ...Et utilisées par la methode "POST"... */
       const options = {
@@ -250,16 +332,22 @@ function postForm() {
       fetch("http://localhost:3000/api/products/order", options)
         .then((response) => response.json())
         .then((data) => {
+          console.log(data);
+
+          localStorage.setItem("orderId", data.orderId);
+
           document.location.href = "confirmation.html?id=" + data.orderId;
         })
         .catch((err) => {
           alert("Problème avec fetch : " + err.message);
         });
     } else {
-      /* 2 - Si isFormValid = false... */
+      /* Et si malgré tout, le formulaire n'est pas valide... */
       alert(
-        "Le formulaire n'est pas renseigné correctement. Veuillez vérifier votre saisie!" /* ...On lance une alerte pour l'utilisateur */
+        "Votre formulaire n'est pas validé, veuillez cliquer une nouvelle fois sur l'onglet 'Panier' pour le valider"
+        /* ...On envoie une alerte pour l'utilisateur */
       );
+      return false;
     }
   });
 }
