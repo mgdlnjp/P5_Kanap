@@ -210,8 +210,8 @@ function modifyItem() {
 function postForm() {
   //Préparation des regles pour verifier les champs du formulaire
   let addressRegExp = /^[a-z'sÀ-ÖØ-öø-ÿ\s]+$/;
+  //Variable possible : let addressRegExp = /^[0-9a-z'sÀ-ÖØ-öø-ÿ\s]+$/; (Ce regex autorise les chiffres en début de ligne)
   let charRegExp = /^[a-zA-Z ,.\-\s]+$/;
-  //Variable possible let addressRegExp = new RegExp("[A-Za-z0-9s'À-ÖØ-öø-ÿ]*$"); //Ce regex autorise les chiffres en début de ligne
   let emailRegExp = new RegExp(
     "^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$"
     );
@@ -342,11 +342,6 @@ function postForm() {
           alert("Problème avec fetch : " + err.message);
         });
     } else {
-      /* Et si malgré tout, le formulaire n'est pas valide... */
-      alert(
-        "Votre formulaire n'est pas validé, veuillez cliquer une nouvelle fois sur l'onglet 'Panier' pour le valider"
-        /* ...On envoie une alerte pour l'utilisateur */
-      );
       return false;
     }
   });
