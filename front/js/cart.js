@@ -209,7 +209,7 @@ function modifyItem() {
 /* Fonction pour valider le formulaire et la commande */
 function postForm() {
   //Préparation des regles pour verifier les champs du formulaire
-  let addressRegExp = /^[A-Za-z'sÀ-ÖØ-öø-ÿ\s]+$/;
+  let addressRegExp = /^[a-z'sÀ-ÖØ-öø-ÿ\s]+$/;
   let charRegExp = /^[a-zA-Z ,.\-\s]+$/;
   //Variable possible let addressRegExp = new RegExp("[A-Za-z0-9s'À-ÖØ-öø-ÿ]*$"); //Ce regex autorise les chiffres en début de ligne
   let emailRegExp = new RegExp(
